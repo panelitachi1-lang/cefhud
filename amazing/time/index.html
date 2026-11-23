@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazing Online - Time Widget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing:border-box; margin:0; padding:0; user-select:none; }
+        body { width:100vw; height:100vh; background:transparent; font-family:'Montserrat',sans-serif; overflow:hidden; position:relative; }
+
+        .stats-widget {
+            position: absolute;
+            right: 30px;
+            bottom: 80px;
+            width: 310px;
+            border-radius: 0;
+            padding: 25px 22px 28px 22px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+            color: #ffffff;
+            text-shadow: 0px 2px 4px rgba(0,0,0,0.35);
+            overflow: hidden;
+            /* Градиент фон */
+            background: linear-gradient(180deg, rgba(81,39,155,0.94) 0%, rgba(121,52,184,0.94) 100%);
+        }
+
+        /* Герб PNG — водяной знак */
+        .widget-emblem {
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 220px;
+            height: 220px;
+            background-image: url('gerb.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.08;
+            pointer-events: none;
+            filter: grayscale(1) brightness(10);
+        }
+
+        .widget-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-header { text-align:center; margin-bottom:22px; }
+        .time-header .clock { font-size:36px; font-weight:800; letter-spacing:0.5px; line-height:1; margin-bottom:5px; }
+        .time-header .date  { font-size:16px; font-weight:700; color:rgba(255,255,255,0.85); letter-spacing:0.3px; }
+
+        .stats-container { display:flex; flex-direction:column; gap:14px; }
+        .stats-row { display:flex; justify-content:space-between; align-items:center; }
+        .stats-label { font-size:14px; font-weight:700; color:rgba(255,255,255,0.9); }
+        .stats-value { font-size:15px; font-weight:800; color:#ffffff; text-align:right; }
+        .stats-value.arrest { color:#ff7070; }
+    </style>
+</head>
+<body>
+    <div class="stats-widget">
+        <!-- Герб PNG водяной знак -->
+        <div class="widget-emblem"></div>
+
+        <div class="widget-content">
+            <div class="time-header">
+                <div id="web-clock" class="clock">00:00:00</div>
+                <div id="web-date"  class="date">00.00.00</div>
+            </div>
+            <div class="stats-container">
+                <div class="stats-row">
+                    <span class="stats-label">Время в игре</span>
+                    <span id="stat-game"  class="stats-value">0 с.</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Время в AFK</span>
+                    <span id="stat-afk"   class="stats-value">0 с.</span>
+                </div>
+                <div class="stats-row">
+                    <span class="stats-label">Время КПЗ</span>
+                    <span id="stat-boost" class="stats-value">Нет</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const elClock = document.getElementById('web-clock');
+        const elDate  = document.getElementById('web-date');
+        const elGame  = document.getElementById('stat-game');
+        const elAfk   = document.getElementById('stat-afk');
+        const elBoost = document.getElementById('stat-boost');
+
+        function updateHudData(time, date, gameTime, afkTime, boostStr) {
+            if (time)     elClock.innerText = time;
+            if (date)     elDate.innerText  = date;
+            if (gameTime) elGame.innerText  = gameTime;
+            if (afkTime)  elAfk.innerText   = afkTime;
+            if (boostStr !== undefined) {
+                elBoost.innerText = boostStr;
+                elBoost.className = (boostStr === 'Нет') ? 'stats-value' : 'stats-value arrest';
+            }
+        }
+
+        if (typeof cef !== 'undefined') {
+            cef.on('time:update', function(time, date, gameTime, afkTime, boostStr) {
+                updateHudData(time, date, gameTime, afkTime, boostStr);
+            });
+        } else {
+            updateHudData('10:52:11', '08.06.26', '36 с.', '20 с.', 'Нет');
+        }
+
+        // Автозакрытие через 7 секунд
+        setTimeout(function() {
+            if (typeof cef !== 'undefined') cef.emit('time:close');
+        }, 7000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+body {
+    
+    /* background-color: #000; */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0; 
+    padding: 0; 
+    overflow: hidden;
+}
+
+
+
+.amazing-main-hud-block {
+    position: absolute;
+    top: 0vh;
+    right: 0vh;
+    width: 30.5vh;
+    height: 25vh;
+}
+
+.amazing-main-hud-block .background {
+    margin: 0;
+    position: absolute;
+    top: 0vh;
+    right: 0vh;
+    width: 72.5vh;
+    filter: brightness(0) saturate(100%);
+}
+
+.amazing-main-hud-block .information-block {
+    margin: 0;
+    position: relative;
+    top: 0vh;
+    left: 0vh;
+    width: 30.5vh;
+    height: 1.7vh;
+    z-index: 1;
+}
+
+.amazing-main-hud-block .information-block .id,
+.amazing-main-hud-block .information-block .name,
+.amazing-main-hud-block .information-block .data,
+.amazing-main-hud-block .information-block .time {
+    margin: 0;
+    position: absolute;
+    display: inline-block;
+}
+
+.amazing-main-hud-block .information-block .id {
+    left: 26.7vh;
+    width: 5vh;
+    height: 1.5vh;
+}
+
+.amazing-main-hud-block .information-block .id::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 209, 85);
+    transform: scale(1.1) skew(27deg, 0deg);
+    z-index: -1;
+}
+/* ˜˜˜ ˜˜˜˜˜˜ - ˜˜˜˜˜˜˜ */
+.amazing-main-hud-block .information-block .id.admin-id::before {
+    background-color: rgb(255, 74, 83) !important;
+}
+
+/* ˜˜˜ ˜˜˜˜˜˜˜˜ ˜˜˜˜˜˜˜˜˜˜˜˜ - ˜˜˜˜˜˜ */
+.amazing-main-hud-block .information-block .id.user-id::before {
+    background-color: rgb(255, 209, 85) !important;
+}
+
+.amazing-main-hud-block .information-block .name {
+    top: 0vh;
+    left: 12.6vh;
+    width: 12.5vh;
+    height: 1.5vh;
+}
+
+.amazing-main-hud-block .information-block .name::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    transform: scale(1.1) skew(27deg, 0deg);
+    z-index: -1;
+}
+
+.amazing-main-hud-block .information-block .data {
+    top: 0vh;
+    left: 4.6vh;
+    width: 6.4vh;
+    height: 1.5vh;
+}
+
+.amazing-main-hud-block .information-block .data::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    transform: scale(1.1) skew(27deg, 0deg);
+    z-index: -1;
+}
+
+.amazing-main-hud-block .information-block .time {
+    top: 0vh;
+    left: -3.2vh;
+    width: 6.4vh;
+    height: 1.5vh;
+}
+
+.amazing-main-hud-block .information-block .time::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+    transform: scale(1.1) skew(27deg, 0deg);
+    z-index: -1;
+}
+
+.amazing-main-hud-block .information-block p {
+    position: relative;
+    text-align: center;
+    top: -0.10vh;
+    width: 4vh;
+    font-size: 1.3vh;
+    font-family: 'amazing/font/13';
+    transform: none !important;
+}
+
+.logotype {
+    position: relative;
+    width: 25vh;
+    top: -9.1vh;
+    left: 5.5vh;
+}
+
+.armour-logo {
+    margin: 0;
+    position: absolute;
+    width: 2.5vh;
+    top: 7.8vh;
+    left: 26.2vh;
+}
+
+.armour-text {
+    margin: 0;
+    position: absolute;
+    font-size: 1.9vh;
+    top: 7.7vh;
+    left: 0.5vh;
+    width: 25vh;
+    text-align: right;
+    color: white;
+    font-family: 'amazing/font/13';
+}
+
+.wanted-logo {
+    margin: 0;
+    position: absolute;
+    width: 2.5vh;
+    top: 16.0vh;
+    left: 26.2vh;
+}
+
+.wanted-text {
+    margin: 0;
+    position: absolute;
+    font-size: 1.9vh;
+    top: 16.0vh;
+    left: 0.5vh;
+    width: 25vh;
+    text-align: right;
+    color: white;
+    font-family: 'amazing/font/13';
+}
+
+.progress-health-block {
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: inline-block; 
+    padding: 1.0vh; 
+    border-radius: 100%; 
+    width: 4.3vh; 
+    height: 4.3vh;
+    top: 11.2vh;
+    left: 24.4vh;
+}
+
+.progress-health-block img {
+    position: relative;
+    width: 1.9vh;
+    top: -4.9vh;
+    left: 0.1vh;
+}
+
+.progress-health-block .text {
+    position: absolute;
+    color: white;
+    width: 20vh;
+    top: 0.7vh;
+    left: -21.2vh;
+    font-size: 2.3vh;
+    text-align: right;
+    font-family: 'amazing/font/13';
+}
+
+.money-block {
+    position: absolute;
+    min-width: 0.0vh;
+    height: 3vh;
+    top: 20.5vh;
+    right: 2.2vh;
+}
+
+.money-block p {
+    margin: 0;
+    position: relative;
+    color: white;
+    font-size: 2.2vh;
+    text-align: right;
+    margin-left: 3.5vh;
+    font-family: 'amazing/font/13';
+}
+
+.money-block img {
+    position: relative;
+    top: -2.8vh;
+    left: 0vh;
+    width: 2.5vh;
+}
+
+.weapon-block {
+    position: absolute;
+    width: 10vh;
+    height: 10vh;
+    top: 10vh;
+    left: 9vh;
+}
+
+.weapon-block img {
+    position: relative;
+    width: 10vh;
+}
+
+.weapon-block p {
+    margin: 0;
+    position: relative;
+    color: white;
+    font-size: 1.5vh;
+    text-align: center;
+    margin-left: 3.5vh;
+    top: -2.6vh;
+    left: -1.5vh;
+    font-family: 'amazing/font/13';
+}

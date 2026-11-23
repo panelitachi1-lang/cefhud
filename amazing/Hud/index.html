@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>Amazing online - HUD</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="assets/css/stylesheet.css">
+    <script src="assets/js/cef-mock.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            overflow: hidden;
+            background: transparent;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* ПРАВАЯ КОЛОНКА */
+        .hud-right {
+            position: fixed;
+            top: .5vw;
+            right: .5vw;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: .4vw;
+            transform: scale(.65);
+            transform-origin: top right;
+        }
+
+        /* НИК + ID */
+        .hud-nameline {
+            display: flex;
+            align-items: center;
+            gap: .35vw;
+            padding: .35vw .6vw;
+            border-radius: .4vw;
+            background: rgba(0,0,0,.30);
+            border: 1px solid rgba(255,255,255,.12);
+            backdrop-filter: blur(.3vw);
+        }
+        .hud-name {
+            font-size: 1.05vw;
+            font-weight: 800;
+            white-space: nowrap;
+            text-shadow: 0 1px 3px rgba(0,0,0,.9);
+        }
+        .hud-id {
+            padding: .15vw .45vw;
+            border-radius: .25vw;
+            font-size: .85vw;
+            font-weight: 900;
+            background: #ffd400;
+            color: #000;
+        }
+        .hud-id.admin { background: #e02020; color: #fff; }
+
+        /* ВРЕМЯ + ЛОГО */
+        .hud-timeline {
+            display: flex;
+            align-items: center;
+            gap: .6vw;
+        }
+        .hud-time {
+            font-size: 2.6vw;
+            font-weight: 900;
+            line-height: 1;
+            text-shadow: 0 0 .6vw rgba(0,0,0,1);
+            text-align: right;
+        }
+        .hud-date {
+            font-size: .8vw;
+            text-align: right;
+            opacity: .85;
+            text-shadow: 0 0 .3vw rgba(0,0,0,.9);
+        }
+        .hud-logo-block {
+            display: flex;
+            align-items: center;
+            gap: .4vw;
+        }
+        .hud-flag {
+            width: .22vw;
+            height: 3.5vw;
+            border-radius: 1vw;
+            background: linear-gradient(to bottom, #fff 33%, #0044ff 33%, #0044ff 66%, #ff003c 66%);
+            box-shadow: 0 0 .4vw rgba(0,0,0,.6);
+        }
+        .hud-logo-text {
+            font-size: 1.35vw;
+            font-weight: 900;
+            line-height: .85;
+            text-transform: uppercase;
+            text-shadow: 0 0 .4vw rgba(0,0,0,.9);
+        }
+
+        /* БРОНЯ + ХП */
+        .hud-bars {
+            display: flex;
+            flex-direction: column;
+            gap: .35vw;
+            width: 100%;
+            transition: opacity .4s, transform .4s;
+        }
+        .hud-bar-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .3vw;
+        }
+        /* иконка + полоска + число — слева направо */
+        .hud-bar-icon {
+            width: 1.1vw;
+            height: 1.1vw;
+            object-fit: contain;
+            filter: drop-shadow(0 0 .15vw rgba(0,0,0,.9));
+            flex-shrink: 0;
+        }
+        .hud-bar-wrap {
+            width: 9vw;
+            height: .45vw;
+            border-radius: 2vw;
+            background: rgba(255,255,255,.15);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .hud-bar-fill {
+            height: 100%;
+            border-radius: 2vw;
+            transition: width .25s ease;
+        }
+        .hud-bar-fill.armor {
+            background: #ffffff;
+        }
+        .hud-bar-fill.hp {
+            background: #ff1a1a;
+        }
+        .hud-bar-val {
+            width: 1.8vw;
+            font-size: .85vw;
+            font-weight: 900;
+            text-align: right;
+            text-shadow: 0 0 .3vw rgba(0,0,0,.9);
+        }
+        .hud-bar-val.hp { color: #ff4455; }
+
+        /* ДЕНЬГИ */
+        .hud-money {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .5vw;
+            padding: .35vw .6vw;
+            border-radius: .35vw;
+            background: rgba(0,0,0,.50);
+            width: auto;
+            transition: opacity .4s, transform .4s;
+        }
+        .hud-money-val {
+            font-size: 1.8vw;
+            font-weight: 900;
+            text-shadow: 0 1px 4px rgba(0,0,0,.9);
+            letter-spacing: .03vw;
+            white-space: nowrap;
+        }
+        /* вертикальный разделитель */
+        .hud-money-sep {
+            width: 1px;
+            height: 1.4vw;
+            background: rgba(255,255,255,.3);
+            flex-shrink: 0;
+        }
+        /* бокс с буквой Р */
+        .hud-money-ruble-img {
+            width: 1.2vw;
+            height: 1.2vw;
+            object-fit: contain;
+            filter: invert(1) drop-shadow(0 0 .2vw rgba(0,0,0,.8));
+            flex-shrink: 0;
+        }
+
+        /* ОРУЖИЕ */
+        .hud-weapon {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: .5vw;
+            padding: .3vw .5vw;
+            border-radius: .4vw;
+            background: rgba(0,0,0,.25);
+            border: 1px solid rgba(255,255,255,.10);
+            backdrop-filter: blur(.2vw);
+            width: 100%;
+        }
+        .hud-weapon-ammo {
+            display: flex;
+            align-items: center;
+            gap: .3vw;
+        }
+        .hud-weapon-ammo-icon {
+            width: .9vw;
+            height: .9vw;
+            object-fit: contain;
+            filter: invert(1);
+            opacity: .8;
+        }
+        .hud-weapon-ammo-text {
+            font-size: .95vw;
+            font-weight: 900;
+            text-shadow: 0 0 .3vw rgba(0,0,0,.9);
+        }
+        .hud-weapon-img {
+            height: 2.5vw;
+            max-width: 6vw;
+            object-fit: contain;
+            filter: drop-shadow(0 0 .4vw rgba(0,0,0,.9));
+        }
+
+        /* AUTH MODE */
+        .hud-right.auth-mode .hud-bars,
+        .hud-right.auth-mode .hud-money,
+        .hud-right.auth-mode .hud-weapon {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-.5vw);
+        }
+
+        .hud-status-row { display: flex; justify-content: flex-end; gap: .5vw; }
+		.hud-status { display: flex; flex-direction: column; align-items: center; gap: .15vw; }
+		.hud-status-circle {
+			position: relative; width: 2.6vw; height: 2.6vw;
+			border-radius: 50%; background: rgba(0,0,0,.55);
+		}
+		.hud-status-ring { position: absolute; inset: 0; transform: rotate(-90deg); }
+		.hud-status-progress {
+			fill: none; stroke-width: 2.5; stroke-dasharray: 100.53;
+			stroke-linecap: round; transition: stroke-dashoffset .3s linear;
+		}
+		.hud-status-progress.energy { stroke: #7CFC00; }
+		.hud-status-progress.cuffs  { stroke: #ff3333; }
+		.hud-status-icon {
+			position: absolute; inset: 0; margin: auto;
+			width: 1.3vw; height: 1.3vw; object-fit: contain;
+			filter: brightness(0) invert(1);
+		}
+		.hud-status-val { font-size: .85vw; font-weight: 900; text-shadow: 0 0 .3vw rgba(0,0,0,.9); }
+
+        
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <!-- ПРАВАЯ КОЛОНКА -->
+    <div class="hud-right auth-mode" id="hud-right" v-if="active">
+
+        <!-- НИК + ID -->
+        <div class="hud-nameline">
+            <div class="hud-name">{{ getInterface() }}</div>
+            <div class="hud-id" :class="{ admin: isAdmin }">{{ id }}</div>
+        </div>
+
+        <!-- ВРЕМЯ + ЛОГО -->
+        <div class="hud-timeline">
+            <div>
+                <div class="hud-time">{{ currentTime }}</div>
+                <div class="hud-date">{{ currentDate }}</div>
+            </div>
+            <div class="hud-logo-block">
+                <div class="hud-flag"></div>
+                <div class="hud-logo-text">AWESOME<br> ONLINE</div>
+            </div>
+        </div>
+
+        <!-- БРОНЯ + ХП -->
+        <div class="hud-bars">
+            <div class="hud-bar-row">
+                <div class="hud-bar-wrap">
+                    <div class="hud-bar-fill armor" :style="{ width: armour + '%' }"></div>
+                </div>
+                <img class="hud-bar-icon" src="assets/images/weapons/armour.png" />
+                <div class="hud-bar-val">{{ armour }}</div>
+            </div>
+            <div class="hud-bar-row">
+                <div class="hud-bar-wrap">
+                    <div class="hud-bar-fill hp" :style="{ width: health + '%' }"></div>
+                </div>
+                <img class="hud-bar-icon" src="assets/images/weapons/health.png" />
+                <div class="hud-bar-val hp">{{ health }}</div>
+            </div>
+        </div>
+
+        <!-- ДЕНЬГИ -->
+        <div class="hud-money">
+            <div class="hud-money-val">{{ formatNumber(money) }}</div>
+            <div class="hud-money-sep"></div>
+            <img class="hud-money-ruble-img" src="assets/images/weapons/ruble.svg" />
+        </div>
+		<!-- СТАТУСЫ -->
+		<div class="hud-status-row" v-if="energyTimer > 0 || cuffTimer > 0">
+			<div class="hud-status" v-if="energyTimer > 0">
+				<div class="hud-status-circle">
+					<svg class="hud-status-ring" viewBox="0 0 36 36">
+						<circle class="hud-status-progress energy" cx="18" cy="18" r="16" :style="{ strokeDashoffset: ring(energyTimer, 90) }"></circle>
+					</svg>
+					<img class="hud-status-icon" src="assets/images/weapons/energy.svg" />
+				</div>
+				<div class="hud-status-val">{{ energyTimer }}</div>
+			</div>
+			<div class="hud-status" v-if="cuffTimer > 0">
+				<div class="hud-status-circle">
+					<svg class="hud-status-ring" viewBox="0 0 36 36">
+						<circle class="hud-status-progress cuffs" cx="18" cy="18" r="16" :style="{ strokeDashoffset: ring(cuffTimer, 600) }"></circle>
+					</svg>
+					<img class="hud-status-icon" src="assets/images/weapons/cuffs.svg" />
+				</div>
+				<div class="hud-status-val">{{ cuffTimer }}</div>
+			</div>
+		</div>
+        <!-- ОРУЖИЕ -->
+        <div class="hud-weapon" v-if="IsWeaponFire">
+            <div class="hud-weapon-ammo">
+                <img class="hud-weapon-ammo-icon" src="assets/images/weapons/firetype_burst.png" />
+                <div class="hud-weapon-ammo-text">{{ ammo }}</div>
+            </div>
+            <img class="hud-weapon-img" :src="`assets/images/weapons/${weapon}.png`" />
+        </div>
+
+    </div>
+
+</div>
+
+<script src="assets/js/vue.js"></script>
+<script>
+    const numberFormatter = new Intl.NumberFormat('ru-RU');
+    const hasCEF = typeof cef !== 'undefined' && cef.on;
+
+    const main = new Vue({
+        el: "#app",
+        data: {
+            active: true,
+            health: 100,
+            id: 0,
+            name: "",
+            currentDate: "",
+            currentTime: "",
+            armour: 100,
+            wanted: 0,
+            money: 0,
+            weapon: 0,
+            ammo: "",
+            isAdmin: false,
+            location: "Загрузка...",
+            locationStreet: ""
+        },
+
+        computed: {
+            IsWeaponFire() {
+                return (this.weapon >= 22 && this.weapon <= 38) ||
+                        this.weapon === 41 || this.weapon === 42;
+            }
+        },
+
+        methods: {
+            getInterface() {
+                return this.name ? this.name.replace(/_/g, ' ') : '';
+            },
+            formatNumber(v) {
+                return numberFormatter.format(v);
+            },
+            updateDateTime() {
+                const now = new Date();
+                const pad = n => String(n).padStart(2, '0');
+                this.currentDate = `${pad(now.getDate())}.${pad(now.getMonth()+1)}.${String(now.getFullYear()).slice(-2)}`;
+                this.currentTime = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            },
+            setAuthMode(state) {
+                const el = document.getElementById('hud-right');
+                if (!el) return;
+                if (state) el.classList.add('auth-mode');
+                else el.classList.remove('auth-mode');
+            }
+        },
+
+        mounted() {
+            this.updateDateTime();
+            setInterval(() => this.updateDateTime(), 500);
+
+            if (!hasCEF) {
+                this.name = "Sergey_Chyorny";
+                this.id = 6;
+                this.health = 84;
+                this.armour = 0;
+                this.money = 58541857;
+                this.location = "Роговичи";
+                this.locationStreet = "Улица Магазинная, 10";
+                return;
+            }
+
+            cef.on("Lethality(executeEvent['main.hud.active'])",   v => { this.active = v; });
+            cef.on("Lethality(executeEvent['main.hud.wanted'])",   v => { this.wanted = v; });
+            cef.on("Lethality(executeEvent['main.hud.id'])",       v => { this.id = v; });
+            cef.on("Lethality(executeEvent['main.hud.name'])",     v => { this.name = v; });
+            cef.on("Lethality(executeEvent['main.hud.admin'])",    v => { this.isAdmin = v; });
+            cef.on("Lethality(executeEvent['main.hud.location'])", v => { this.location = v; });
+
+            cef.on("classic:hud:authMode", v => this.setAuthMode(v));
+            cef.on("classic:hud:active",   v => { this.active = !!v; });
+
+            cef.on("classic:hud:location", (city, street) => {
+                this.location = city || '';
+                this.locationStreet = street || '';
+            });
+
+            cef.on("classic:hud:update", (cash, name, pid) => {
+                this.money = cash;
+                this.name  = name;
+                this.id    = pid;
+            });
+
+            cef.on("game:data:playerStats", (hp, maxHp, arm, breath, wanted, weapon, ammo, maxAmmo, money, speed) => {
+                this.health = Math.round(hp);
+                this.armour = Math.round(arm);
+                // money НЕ берём отсюда — берём только из classic:hud:update
+                this.weapon = weapon;
+                const rem   = Math.max(0, maxAmmo - ammo);
+                this.ammo   = `${ammo} / ${rem}`;
+            });
+        }
+    });
+
+    if (hasCEF) {
+        cef.emit("game:hud:setComponentVisible", "interface", false);
+        cef.emit("game:hud:setComponentVisible", "radar", true);
+        cef.emit("game:data:pollPlayerStats", true, 50);
+    }
+
+    window.toggleHudMode = v => main.setAuthMode(v);
+    window.setHudActive  = v => { main.active = !!v; };
+    window.updateHUD = d => {
+        if (!d) return;
+        if (d.name           !== undefined) main.name           = d.name;
+        if (d.id             !== undefined) main.id             = d.id;
+        if (d.hp             !== undefined) main.health         = d.hp;
+        if (d.armor          !== undefined) main.armour         = d.armor;
+        if (d.money          !== undefined) main.money          = d.money;
+        if (d.admin          !== undefined) main.isAdmin        = d.admin;
+        if (d.location       !== undefined) main.location       = d.location;
+        if (d.locationStreet !== undefined) main.locationStreet = d.locationStreet;
+    };
+	// в mounted, в !hasCEF блок добавить:
+	this.energyTimer = 90;
+	this.cuffTimer = 600;
+
+	// и после остальных cef.on(...):
+	cef.on("classic:hud:energy", v => { this.energyTimer = v; });
+	cef.on("classic:hud:cuffs",  v => { this.cuffTimer = v; });
+
+	setInterval(() => {
+		if (this.energyTimer > 0) this.energyTimer--;
+		if (this.cuffTimer > 0) this.cuffTimer--;
+	}, 1000);
+</script>
+</body>
+</html>

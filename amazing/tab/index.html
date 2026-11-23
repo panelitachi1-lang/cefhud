@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+@font-face{font-family:'Proxima Nova Bold';src:url('css/fonts/ProximaNova-Bold.ttf') format('truetype');}
+@font-face{font-family:'Gotham-Medium';src:url('css/fonts/Gotham Pro Medium.ttf') format('truetype');}
+*{margin:0;padding:0;box-sizing:border-box;user-select:none;}
+html,body{width:100vw;height:100vh;background:transparent;overflow:hidden;font-family:'Proxima Nova Bold',sans-serif;color:#fff;}
+#tab{position:fixed;inset:0;background:#1a1a1a;display:none;flex-direction:column;}
+#tab.active{display:flex;}
+
+/* NAV */
+nav{height:46px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;padding:0 16px;flex-shrink:0;background:#141414;}
+.nq{width:36px;height:36px;border:1px solid rgba(255,255,255,.2);border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:'Gotham-Medium';font-size:15px;cursor:pointer;color:#fff;}
+.ntabs{display:flex;flex:1;justify-content:center;}
+.ntab{background:none;border:none;color:rgba(255,255,255,.35);font-family:'Gotham-Medium';font-size:14px;letter-spacing:.14em;text-transform:uppercase;padding:0 32px;height:46px;cursor:pointer;position:relative;transition:color .18s;}
+.ntab:hover{color:rgba(255,255,255,.7);}
+.ntab.active{color:#fff;}
+.ntab.active::after{content:'';position:absolute;bottom:0;left:32px;right:32px;height:2px;background:#e69348;}
+.nfps{margin-left:auto;margin-right:10px;display:flex;gap:18px;font-family:'Gotham-Medium';font-size:12px;color:rgba(255,255,255,.28);}
+.nfps b{color:rgba(255,255,255,.65);}
+
+/* PANES */
+.pane{display:none;flex:1;min-height:0;flex-direction:column;}
+.pane.active{display:flex;}
+
+/* ══ PLAYERS ══ */
+#p-players{flex-direction:row!important;}
+.pl-tbl{width:440px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.07);}
+.pl-th{display:grid;grid-template-columns:72px 1fr 94px 74px;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.07);}
+.pl-th span{font-family:'Gotham-Medium';font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.08em;text-transform:uppercase;}
+.pl-body{flex:1;overflow-y:auto;scrollbar-width:none;}
+.pl-body::-webkit-scrollbar{display:none;}
+.pr{display:grid;grid-template-columns:72px 1fr 94px 74px;padding:8px 18px;font-size:15px;color:rgba(255,255,255,.65);transition:background .1s;}
+.pr:hover{background:rgba(255,255,255,.03);}
+.pr.me{color:#e69348;}
+.pr .rr{color:#e74c3c;}
+.pl-pg{height:44px;border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;gap:22px;flex-shrink:0;}
+.pl-pg span{font-family:'Gotham-Medium';font-size:14px;color:rgba(255,255,255,.38);}
+.pgb{background:none;border:none;color:rgba(255,255,255,.28);font-size:28px;cursor:pointer;line-height:1;}
+.pgb:hover{color:#fff;}
+.pl-mid{flex:1;padding:18px 22px;display:flex;flex-direction:column;gap:16px;border-right:1px solid rgba(255,255,255,.07);}
+.slbl{font-family:'Gotham-Medium';font-size:12px;color:rgba(255,255,255,.27);letter-spacing:.13em;text-transform:uppercase;margin-bottom:10px;}
+.srow{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.scnt{font-size:14px;color:rgba(255,255,255,.36);}
+.sinp{flex:1;height:36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:3px;padding:0 12px;color:#fff;font-family:'Proxima Nova Bold';font-size:14px;outline:none;}
+.sinp:focus{border-color:#e69348;}
+.sinp::placeholder{color:rgba(255,255,255,.18);}
+.ftgs{display:flex;flex-wrap:wrap;gap:8px;}
+.ftg{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:3px;padding:6px 14px;font-size:13px;color:rgba(255,255,255,.38);cursor:pointer;display:flex;align-items:center;gap:6px;}
+.ftg:hover{border-color:#e69348;color:#e69348;}
+.ftg .x{font-size:10px;color:rgba(255,255,255,.2);}
+.bns{display:flex;gap:12px;flex:1;}
+.bn{flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:5px;display:flex;align-items:center;justify-content:center;min-height:90px;}
+.bn img{max-width:110px;max-height:76px;object-fit:contain;}
+.pl-notifs{width:340px;flex-shrink:0;padding:18px 16px;overflow-y:auto;scrollbar-width:none;}
+.pl-notifs::-webkit-scrollbar{display:none;}
+.ntf{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);border-radius:4px;padding:12px 14px;margin-bottom:10px;}
+.ntft{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.bdg{font-family:'Gotham-Medium';font-size:11px;letter-spacing:.05em;padding:3px 9px;border-radius:2px;text-transform:uppercase;}
+.b1{background:#27ae60;}.b2{background:#2d5be3;}.b3{background:#e67e22;}.b4{background:#c0392b;}
+.ntm{margin-left:auto;font-size:11px;color:rgba(255,255,255,.2);text-align:right;line-height:1.4;}
+.ntx{font-size:13px;color:rgba(255,255,255,.5);line-height:1.5;}
+
+/* ══ STATS ══ */
+#p-stats{flex-direction:column!important;}
+
+/* HERO */
+.sh{display:flex;align-items:center;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.07);gap:20px;flex-shrink:0;background:#141414;}
+.slv{text-align:left;min-width:68px;}
+.slv .ll{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.3);letter-spacing:.09em;}
+.slv .ln{font-size:36px;line-height:1;color:#fff;}
+.xb{height:2px;background:rgba(255,255,255,.08);border-radius:1px;margin-top:4px;width:60px;}
+.xf{height:100%;background:#e69348;border-radius:1px;}
+.xt{font-size:10px;color:rgba(255,255,255,.28);margin-top:2px;}
+.sn{flex:0 0 auto;}
+.sn .nm{font-family:'Gotham-Medium';font-size:22px;color:#fff;display:flex;align-items:center;gap:8px;}
+.sn .sx{color:#5dade2;font-size:16px;}
+.sn .sub{display:flex;gap:14px;margin-top:4px;font-size:13px;color:rgba(255,255,255,.32);}
+.sfam{flex:1;padding-left:40px;}
+.sfam .ll{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.28);}
+.sfam .lv{font-size:15px;color:#fff;margin-top:2px;}
+.smn{display:flex;gap:36px;margin-left:auto;}
+.smi .ll{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.28);letter-spacing:.07em;text-transform:uppercase;}
+.smi .lv{font-size:18px;color:#fff;margin-top:2px;text-align:right;}
+
+/* STATS BODY */
+.sb{display:flex;flex:1;min-height:0;}
+
+/* COL GENERAL - широкая */
+.sc-gen{width:320px;flex-shrink:0;border-right:1px solid rgba(255,255,255,.06);padding:12px 16px;display:flex;flex-direction:column;}
+/* COL JOBS */
+.sc-job{width:230px;flex-shrink:0;border-right:1px solid rgba(255,255,255,.06);padding:12px 14px;overflow-y:auto;scrollbar-width:none;}
+.sc-job::-webkit-scrollbar{display:none;}
+/* COL CHAR */
+.sc-char{flex:1;border-right:1px solid rgba(255,255,255,.06);padding:12px 18px;overflow-y:auto;scrollbar-width:none;}
+.sc-char::-webkit-scrollbar{display:none;}
+/* COL LIC */
+.sc-lic{width:76px;flex-shrink:0;padding:12px 0;display:flex;flex-direction:column;align-items:center;}
+
+.ct{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.27);letter-spacing:.13em;text-transform:uppercase;margin-bottom:12px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,.06);width:100%;}
+
+/* GEN — тонкие полоски слева + сетка */
+.gi{display:flex;gap:10px;flex:1;}
+.gbars{display:flex;gap:4px;flex-shrink:0;}
+.gbar-wrap{display:flex;flex-direction:column;align-items:center;gap:3px;}
+/* полоска: 3px ширина, на всю высоту колонки */
+.gbar{width:3px;flex:1;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;position:relative;min-height:200px;}
+.gbar-f{position:absolute;inset:0;border-radius:2px;}
+.gbarlbl{font-family:'Gotham-Medium';font-size:7px;color:rgba(255,255,255,.22);writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.04em;white-space:nowrap;}
+.gg{flex:1;display:flex;flex-direction:column;gap:10px;}
+.gr{display:flex;gap:12px;}
+.gc{flex:1;}
+.gc .ll{font-family:'Gotham-Medium';font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:3px;}
+.gc .lv{font-size:15px;color:#fff;}
+
+/* JOB SKILLS */
+.js{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:3px;padding:8px 11px;margin-bottom:5px;}
+.js .jn{font-family:'Gotham-Medium';font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#fff;}
+.js .jl{font-size:11px;color:rgba(255,255,255,.3);margin-top:2px;}
+.js .jbr{display:flex;align-items:center;gap:8px;margin-top:6px;}
+.js .jt{flex:1;height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;}
+.js .jf{height:100%;background:#e69348;border-radius:2px;}
+.js .jp{font-size:11px;color:rgba(255,255,255,.3);}
+
+/* CHAR SKILLS — полоски как на примере: фиксированная длина ~200px */
+.cs{display:flex;align-items:center;margin-bottom:10px;gap:10px;}
+.cs .cn{flex:0 0 150px;font-size:15px;color:rgba(255,255,255,.6);}
+.cs .ct2{width:200px;height:4px;background:rgba(255,255,255,.07);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.cs .cf{height:100%;background:#e69348;border-radius:2px;}
+.cs .cp{font-size:14px;color:rgba(255,255,255,.4);min-width:44px;text-align:right;}
+
+/* LICENSES */
+.li{width:54px;height:54px;background:rgba(230,147,72,.12);border:1px solid rgba(230,147,72,.3);border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
+.li svg{stroke:#e69348;}
+
+/* TRANSPORT */
+.str{border-top:1px solid rgba(255,255,255,.07);flex-shrink:0;background:#141414;}
+.strh{display:flex;align-items:center;padding:9px 18px;}
+.strhct{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.27);letter-spacing:.13em;text-transform:uppercase;}
+.strhline{flex:1;height:1px;background:rgba(255,255,255,.07);margin:0 14px;}
+.trnav{display:flex;gap:5px;}
+.tnb{width:24px;height:24px;background:rgba(255,255,255,.07);border:none;color:rgba(255,255,255,.4);border-radius:3px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.tnb:hover{color:#fff;}
+.trrow{display:flex;}
+.car{flex:1;text-align:center;padding:14px 8px;border-top:1px solid rgba(255,255,255,.07);border-right:1px solid rgba(255,255,255,.07);background:rgba(0,0,0,.15);}
+.car:first-child{border-left:1px solid rgba(255,255,255,.07);}
+.car.lkd{background:rgba(231,76,60,.07);border-color:rgba(231,76,60,.35);}
+.car .cn2{font-family:'Gotham-Medium';font-size:11px;color:rgba(255,255,255,.25);margin-bottom:6px;letter-spacing:.05em;}
+.car .cnm{font-family:'Gotham-Medium';font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-top:7px;color:rgba(255,255,255,.38);}
+.car.lkd .cnm{color:rgba(231,76,60,.7);}
+
+.stub{flex:1;display:flex;align-items:center;justify-content:center;font-family:'Gotham-Medium';font-size:14px;color:rgba(255,255,255,.1);letter-spacing:.15em;}
+</style>
+</head>
+<body>
+<div id="tab">
+<nav>
+  <div class="nq" id="btn-q">Q</div>
+  <div class="ntabs">
+    <button class="ntab active" data-tab="players">Игроки</button>
+    <button class="ntab" data-tab="stats">Статистика</button>
+    <button class="ntab" data-tab="tasks">Задания</button>
+    <button class="ntab" data-tab="shop">Магазин</button>
+    <button class="ntab" data-tab="inv">Инвентарь</button>
+  </div>
+  <div class="nfps">
+    <span>кадров/с <b id="fps">—</b></span>
+    <span>ГП <b id="gp">—</b> %</span>
+    <span>ЦП <b id="cp">—</b> %</span>
+    <span>LAT <b id="lat">—</b></span>
+  </div>
+  <div class="nq" id="btn-e">E</div>
+</nav>
+
+<!-- PLAYERS -->
+<div class="pane active" id="p-players">
+  <div class="pl-tbl">
+    <div class="pl-th"><span>ID ▲</span><span>Никнейм</span><span>Уровень</span><span>Пинг</span></div>
+    <div class="pl-body" id="pl-body"></div>
+    <div class="pl-pg">
+      <button class="pgb" id="pp">&#8249;</button>
+      <span id="pi">1 / 1</span>
+      <button class="pgb" id="pn">&#8250;</button>
+    </div>
+  </div>
+  <div class="pl-mid">
+    <div>
+      <div class="slbl">Поиск игроков</div>
+      <div class="srow"><span class="scnt" id="sc">Игроков: 0</span><input class="sinp" id="si" placeholder="Поиск по имени"></div>
+      <div class="ftgs">
+        <div class="ftg">Организация <span class="x">✕</span></div>
+        <div class="ftg">Семья <span class="x">✕</span></div>
+        <div class="ftg">Компания <span class="x">✕</span></div>
+        <div class="ftg">Лидеры <span class="x">✕</span></div>
+        <div class="ftg">Админы <span class="x">✕</span></div>
+        <div class="ftg">Хелперы <span class="x">✕</span></div>
+      </div>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;">
+      <div class="slbl">Сейчас на сервере</div>
+      <div class="bns"><div class="bn"><img src="day2.png" alt=""></div><div class="bn"><img src="donate.png" alt=""></div></div>
+    </div>
+  </div>
+  <div class="pl-notifs">
+    <div class="slbl">Уведомления</div>
+    <div class="ntf"><div class="ntft"><span class="bdg b1">Буст Активен</span><span class="ntm">50 секунд назад<br>11:15:59</span></div><div class="ntx">Сегодня на сервере 3X День! Зарплата и опыт начисляются в 3 раза больше!</div></div>
+    <div class="ntf"><div class="ntft"><span class="bdg b2">Сервер</span><span class="ntm">2 минуты назад<br>18:14:22</span></div><div class="ntx">Технические работы завершены, приятной игры.</div></div>
+    <div class="ntf"><div class="ntft"><span class="bdg b3">Ивент</span><span class="ntm">15 минут назад<br>18:00:00</span></div><div class="ntx">Включён x2 опыт на вечер.</div></div>
+    <div class="ntf"><div class="ntft"><span class="bdg b4">Безопасность</span><span class="ntm">1 час назад<br>17:15:00</span></div><div class="ntx">Не передавайте никому данные аккаунта.</div></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="pane" id="p-stats">
+  <div class="sh">
+    <div class="slv">
+      <div class="ll">УРОВЕНЬ</div>
+      <div class="ln" id="sl">—</div>
+      <div class="xb"><div class="xf" id="xf" style="width:0%"></div></div>
+      <div class="xt" id="xt">—</div>
+    </div>
+    <div class="sn">
+      <div class="nm"><span id="sname">—</span><span class="sx">♂</span></div>
+      <div class="sub"><span id="swanted">—</span><span>|</span><span id="sfines">—</span></div>
+    </div>
+    <div class="sfam"><div class="ll">СЕМЬЯ</div><div class="lv" id="sfam">—</div></div>
+    <div class="smn">
+      <div class="smi"><div class="ll">ТЕЛЕФОН</div><div class="lv" id="sph">—</div></div>
+      <div class="smi"><div class="ll">НАЛИЧНЫЕ</div><div class="lv" id="scash">—</div></div>
+      <div class="smi"><div class="ll">ДЕНЕГ В БАНКЕ</div><div class="lv" id="sbank">—</div></div>
+    </div>
+  </div>
+
+  <div class="sb">
+    <!-- GEN -->
+    <div class="sc-gen">
+      <div class="ct">Общая информация</div>
+      <div class="gi">
+        <div class="gbars">
+          <div class="gbar-wrap">
+            <div class="gbar"><div class="gbar-f" style="background:#27ae60;"></div></div>
+            <div class="gbarlbl">СИЛА ПЕРСОНАЖА</div>
+          </div>
+          <div class="gbar-wrap">
+            <div class="gbar"><div class="gbar-f" style="background:#27ae60;"></div></div>
+            <div class="gbarlbl">ВЫНОСЛИВОСТЬ ПЕРСОНАЖА</div>
+          </div>
+        </div>
+        <div class="gg">
+          <div class="gr"><div class="gc"><div class="ll">Военный билет</div><div class="lv" id="sarmy">—</div></div><div class="gc"><div class="ll">Организация</div><div class="lv" id="sorg">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Законопослушность</div><div class="lv" id="slaw">—</div></div><div class="gc"><div class="ll">Должность</div><div class="lv" id="spost">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Судимости</div><div class="lv" id="scrimes">—</div></div><div class="gc"><div class="ll">Выговоры</div><div class="lv" id="swarns">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Наркозависимость</div><div class="lv" id="sdrug">—</div></div><div class="gc"><div class="ll">Работа</div><div class="lv" id="sjob">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Проживание</div><div class="lv" id="shome">—</div></div><div class="gc"><div class="ll">VIP Статус</div><div class="lv" id="svip">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Бизнес</div><div class="lv" id="sbiz">—</div></div><div class="gc"><div class="ll">Black VIP Статус</div><div class="lv" id="sbvip">—</div></div></div>
+          <div class="gr"><div class="gc"><div class="ll">Компания</div><div class="lv" id="scomp">—</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOBS -->
+    <div class="sc-job">
+      <div class="ct">Рабочие навыки</div>
+      <div id="jobs-list"></div>
+    </div>
+
+    <!-- CHAR -->
+    <div class="sc-char">
+      <div class="ct">Навыки персонажа</div>
+      <div id="char-list"></div>
+    </div>
+
+    <!-- LIC -->
+    <div class="sc-lic">
+      <div class="ct" style="text-align:center;padding-left:0;">Лицензии</div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 11l1.5-4.5h11L19 11"/><rect x="2" y="11" width="20" height="6" rx="2"/><circle cx="6" cy="17" r="2"/><circle cx="18" cy="17" r="2"/></svg></div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="5" cy="16" r="3"/><circle cx="19" cy="16" r="3"/><path d="M5 16l4-6h5l3 4"/><path d="M12 10V7l3-2"/></svg></div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="1" y="8" width="14" height="9" rx="1"/><path d="M15 12h4l2 3v2h-6v-5z"/><circle cx="5.5" cy="17" r="1.5"/><circle cx="18.5" cy="17" r="1.5"/></svg></div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="10" width="18" height="8" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
+      <div class="li"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="13" width="10" height="6" rx="1"/><path d="M13 15l4-2v6l-4-2"/><path d="M7 13V9"/><path d="M5 9h4"/></svg></div>
+    </div>
+  </div>
+
+  <!-- TRANSPORT -->
+  <div class="str">
+    <div class="strh">
+      <span class="strhct">Транспорт</span>
+      <div class="strhline"></div>
+      <div class="trnav"><button class="tnb">&#8249;</button><button class="tnb">&#8250;</button></div>
+    </div>
+    <div class="trrow" id="car-row">
+      <div class="car">
+        <div class="cn2">НЕТ НОМЕРОВ</div>
+        <svg width="42" height="30" viewBox="0 0 42 30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"><rect x="2" y="10" width="38" height="14" rx="2"/><path d="M6 10l4-8h22l4 8"/><circle cx="10" cy="24" r="4"/><circle cx="32" cy="24" r="4"/></svg>
+        <div class="cnm">ЗАЗ-968М</div>
+      </div>
+      <div class="car">
+        <div class="cn2">НЕТ НОМЕРОВ</div>
+        <svg width="42" height="30" viewBox="0 0 42 30" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.2"><rect x="2" y="10" width="38" height="14" rx="2"/><path d="M6 10l4-8h22l4 8"/><circle cx="10" cy="24" r="4"/><circle cx="32" cy="24" r="4"/></svg>
+        <div class="cnm">Велосипед</div>
+      </div>
+      <div class="car">
+        <div class="cn2"></div>
+        <svg width="42" height="30" viewBox="0 0 42 30" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.2" stroke-dasharray="4,3"><rect x="2" y="10" width="38" height="14" rx="2"/><path d="M6 10l4-8h22l4 8"/><circle cx="10" cy="24" r="4"/><circle cx="32" cy="24" r="4"/></svg>
+        <div class="cnm">Свободный слот</div>
+      </div>
+      <div class="car lkd">
+        <div class="cn2"></div>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(231,76,60,0.65)" stroke-width="1.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <div class="cnm">Недоступен</div>
+      </div>
+      <div class="car lkd">
+        <div class="cn2"></div>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(231,76,60,0.65)" stroke-width="1.4"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <div class="cnm">Недоступен</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pane" id="p-tasks"><div class="stub">ЗАДАНИЯ — СКОРО</div></div>
+<div class="pane" id="p-shop"><div class="stub">МАГАЗИН — СКОРО</div></div>
+<div class="pane" id="p-inv"><div class="stub">ИНВЕНТАРЬ — СКОРО</div></div>
+</div>
+
+<script>
+if(typeof cef==='undefined')window.cef={on:()=>{},emit:(e,d)=>console.log('[cef]',e,d)};
+
+// ── PLAYERS ──────────────────────────────────────────────────
+const PER=25;let all=[],filt=[],pg=0;
+function gen(){
+  const r=[{id:1295,name:'test_1',level:38,ping:42,me:true}];
+  const ns=['test_2','test_3','test_4','test_5','test_6'];
+  for(let i=0;i<140;i++)r.push({id:1000+i,name:ns[i%ns.length]+'_'+(i+2),level:i+1,ping:15+i*7});
+  return r;
+}
+function rpl(){
+  const b=document.getElementById('pl-body');b.innerHTML='';
+  filt.slice(pg*PER,(pg+1)*PER).forEach(p=>{
+    const r=document.createElement('div');r.className='pr'+(p.me?' me':'');
+    r.innerHTML=`<span>${p.id}</span><span>${p.name}</span><span>${p.level}</span><span${p.ping>100?' class="rr"':''}>${p.ping}</span>`;
+    b.appendChild(r);
+  });
+  document.getElementById('pi').textContent=(pg+1)+' / '+Math.max(1,Math.ceil(filt.length/PER));
+  document.getElementById('sc').textContent='Игроков: '+all.length;
+}
+document.getElementById('pp').onclick=()=>{if(pg>0){pg--;rpl();}};
+document.getElementById('pn').onclick=()=>{if((pg+1)*PER<filt.length){pg++;rpl();}};
+document.getElementById('si').oninput=function(){
+  const q=this.value.trim().toLowerCase();
+  filt=q?all.filter(p=>p.name.toLowerCase().includes(q)):[...all];pg=0;rpl();
+};
+
+// ── STATS ────────────────────────────────────────────────────
+const CHAR_SKILLS=['Пистолеты','Дробовики','АКС-74У','АК-47','АК-105М','Бокс','Кунг-фу','Кик-боксинг','Борьба в партере','Удар с локтя'];
+function buildCharList(skills){
+  const c=document.getElementById('char-list');c.innerHTML='';
+  CHAR_SKILLS.forEach((name,i)=>{
+    const pct=skills&&skills[i]!==undefined?skills[i]:0;
+    const d=document.createElement('div');d.className='cs';
+    d.innerHTML=`<div class="cn">${name}</div><div class="ct2"><div class="cf" style="width:${pct}%"></div></div><div class="cp">${pct} %</div>`;
+    c.appendChild(d);
+  });
+}
+function buildJobList(jobs){
+  const c=document.getElementById('jobs-list');c.innerHTML='';
+  if(!jobs||!jobs.length)return;
+  jobs.forEach(j=>{
+    const pct=j.max?Math.round(j.cur/j.max*100):0;
+    const d=document.createElement('div');d.className='js';
+    d.innerHTML=`<div class="jn">${j.name}</div><div class="jl">Уровень ${j.level}</div><div class="jbr"><div class="jt"><div class="jf" style="width:${pct}%"></div></div><span class="jp">${j.cur} / ${j.max}</span></div>`;
+    c.appendChild(d);
+  });
+}
+function applyStats(d){
+  const s=(i,v)=>{const e=document.getElementById(i);if(e&&v!==undefined&&v!==null)e.textContent=v;};
+  s('sl',d.level);s('xt',d.exp);
+  if(d.expPct!==undefined)document.getElementById('xf').style.width=d.expPct+'%';
+  s('sname',d.name);s('swanted',d.wanted);s('sfines',d.fines);s('sfam',d.family||'Нет');
+  s('sph',d.phone);s('scash',d.cash);s('sbank',d.bank);
+  s('sarmy',d.army);s('sorg',d.org);s('slaw',d.law);s('spost',d.post);
+  s('scrimes',d.crimes);s('swarns',d.warns);s('sdrug',d.drug);s('sjob',d.job);
+  s('shome',d.home);s('svip',d.vip);s('sbiz',d.biz);s('sbvip',d.bvip);s('scomp',d.company);
+  buildCharList(d.charSkills);
+  buildJobList(d.jobSkills);
+}
+
+// ── TABS ────────────────────────────────────────────────────
+const tm={players:'p-players',stats:'p-stats',tasks:'p-tasks',shop:'p-shop',inv:'p-inv'};
+document.querySelectorAll('.ntab').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.ntab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');document.getElementById(tm[b.dataset.tab]).classList.add('active');
+    if(b.dataset.tab==='stats')cef.emit('tab:request_stats','1');
+  };
+});
+function open_(){all=gen();filt=[...all];pg=0;rpl();document.getElementById('tab').classList.add('active');cef.emit('tab:opened','1');}
+function close_(){document.getElementById('tab').classList.remove('active');cef.emit('tab:closed','1');}
+document.getElementById('btn-q').onclick=close_;
+document.addEventListener('keydown',e=>{if(e.key==='Escape')close_();});
+cef.on('tab:open',()=>open_());
+cef.on('tab:players',json=>{try{all=JSON.parse(json);filt=[...all];pg=0;rpl();}catch(e){}});
+cef.on('tab:stats',json=>{try{applyStats(JSON.parse(json));}catch(e){}});
+window.onload=()=>cef.emit('tab:ready','1');
+buildCharList([]);buildJobList([]);
+</script>
+</body>
+</html>

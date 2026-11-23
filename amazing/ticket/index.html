@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family: 'Proxima Nova Bold';
+    src: url('css/fonts/ProximaNova-Bold.ttf') format('truetype');
+    font-weight: bold;
+  }
+  @font-face {
+    font-family: 'Gotham-Medium';
+    src: url('css/fonts/Gotham Pro Medium.ttf');
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 100vw; height: 100vh;
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Proxima Nova Bold', sans-serif;
+    overflow: hidden;
+  }
+  .dialog {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to bottom right, #1a1a1c, #201f24);
+    border: 1px solid #444;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    min-width: 500px;
+    max-width: 820px;
+    z-index: 1000;
+    color: #fff;
+    user-select: none;
+    overflow: hidden;
+  }
+  .dialog::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      linear-gradient(to bottom, rgba(26,26,28,0.6) 0%, rgba(32,31,36,0.1) 100%),
+      url('background.png');
+    z-index: -1;
+  }
+  .dialog-header {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dialog-header::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,255,255,0.25), rgba(255,255,255,0));
+    align-self: center;
+    display: block;
+    margin-top: 10px;
+    margin-left: 5px;
+  }
+  .dialog-title {
+    font-family: 'Gotham-Medium', sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+    color: #e69348;
+    text-transform: uppercase;
+    margin-top: 10px;
+    letter-spacing: 0.155vh;
+  }
+  .dialog-content {
+    padding: 0 20px 10px;
+    max-height: 420px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e69348 transparent;
+    margin-top: -5px;
+  }
+  .dialog-content::-webkit-scrollbar { width: 4px; }
+  .dialog-content::-webkit-scrollbar-thumb { background: #e69348; border-radius: 2px; }
+  .dialog-list { display: flex; flex-direction: column; gap: 3px; }
+  .dialog-list-item {
+    padding: 11px 14px;
+    cursor: pointer;
+    border-radius: 2px;
+    background: rgba(0,0,0,0.5);
+    font-family: 'Proxima Nova Bold', sans-serif;
+    font-size: 15px;
+    transition: background 0.15s;
+    line-height: 1.4;
+  }
+  .dialog-list-item:hover { background: rgba(255,255,255,0.07); }
+  .dialog-list-item.selected {
+    background: #e69348;
+    color: #1a1a1c;
+    box-shadow: 0 0 5px rgba(230,147,72,0.5);
+  }
+  .item-label {
+    font-family: 'Gotham-Medium', sans-serif;
+    font-size: 13px;
+    color: #e69348;
+    margin-right: 5px;
+  }
+  .dialog-list-item.selected .item-label { color: #1a1a1c; }
+  .item-text { color: #fff; }
+  .dialog-list-item.selected .item-text { color: #1a1a1c; }
+  .dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 8px;
+  }
+  .dialog-button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 1.5px;
+    cursor: pointer;
+    font-size: 12px;
+    flex: 1;
+    text-transform: uppercase;
+    font-family: 'Proxima Nova Bold', sans-serif;
+    transition: opacity 0.2s, transform 0.1s;
+    margin-bottom: 10px;
+  }
+  .dialog-button:active { transform: scale(0.98); }
+  .btn-primary {
+    background-image: linear-gradient(to right, #21a24d, #5fda55);
+    color: #fff;
+    box-shadow: 0 1.5px 0 #2d682f;
+    margin-right: 5px;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary {
+    background: #3f3f41;
+    color: rgba(255,255,255,0.7);
+    opacity: 0.7;
+    outline: 0.1px solid rgba(255,255,255,0.3);
+    margin-left: 5px;
+  }
+  .btn-secondary:hover { opacity: 0.9; }
+</style>
+</head>
+<body>
+<div class="dialog" id="dialog">
+  <div class="dialog-header">
+    <div class="dialog-title" id="dialogTitle">ВЫБЕРИТЕ ГЛАВУ КОАП</div>
+  </div>
+  <div class="dialog-content">
+    <div class="dialog-list" id="dialogList"></div>
+  </div>
+  <div class="dialog-buttons" id="dialogButtons"></div>
+</div>
+
+<script>
+  // ── Все данные КоАП прямо в JS ─────────────────────────
+  var CHAPTERS = [
+    {id:1,  title:'Глава 1. Отсутствие документов, регистрации автомобиля, штрафы'},
+    {id:2,  title:'Глава 2. Техническое состояние транспортного средства'},
+    {id:3,  title:'Глава 3. Отсутствие права управления транспортным средством'},
+    {id:4,  title:'Глава 4. Превышение скорости (Упразднена)'},
+    {id:5,  title:'Глава 5. Железная дорога'},
+    {id:6,  title:'Глава 6. Автомагистраль'},
+    {id:7,  title:'Глава 7. Перекресток'},
+    {id:8,  title:'Глава 8. Маневрирование'},
+    {id:9,  title:'Глава 9. Расположение и обгон'},
+    {id:10, title:'Глава 10. Знаки и разметка'},
+    {id:11, title:'Глава 11. Предоставление преимущества в движении'},
+    {id:12, title:'Глава 12. Остановка и стоянка'},
+    {id:13, title:'Глава 13. Безопасность дорожного движения'},
+    {id:14, title:'Глава 14. Дорожно-транспортные происшествия'},
+    {id:15, title:'Глава 15. Полиция'},
+    {id:16, title:'Глава 16. Правонарушения, посягающие на права граждан'},
+    {id:17, title:'Глава 17. Правонарушения, посягающие на здоровье и нравственность'},
+    {id:18, title:'Глава 18. Правонарушения, посягающие на общественный порядок'},
+    {id:19, title:'Глава 19. Правонарушения в день тишины'},
+    {id:20, title:'Глава 20. Правонарушения против порядка управления'},
+  ];
+
+  var ARTICLES = {
+    1: [
+      {n:'1.1', t:'Эксплуатация транспортного средства с наличием трёх и более неоплаченных административных штрафов, превышающих срок 24 часа', f:25000},
+      {n:'1.2', t:'Управление транспортным средством, не зарегистрированным в установленном порядке', f:20000},
+    ],
+    2: [
+      {n:'2.1', t:'Использование специальных световых и звуковых сигналов, закреплённых на гражданских транспортных средствах', f:50000},
+      {n:'2.2', t:'Управление транспортным средством с неисправными световыми приборами', f:5000},
+      {n:'2.3', t:'Управление транспортным средством с неисправным двигателем', f:10000},
+      {n:'2.4', t:'Управление транспортным средством с неисправным колесом', f:25000},
+      {n:'2.5', t:'Управление транспортным средством с неисправным поворотником', f:5000},
+    ],
+    3: [
+      {n:'3.1', t:'Управление транспортным средством водителем, не имеющим права управления (+эвакуация)', f:35000},
+      {n:'3.2', t:'Управление транспортным средством водителем, лишённым права управления (+эвакуация)', f:50000},
+      {n:'3.3', t:'Управление транспортным средством водителем в состоянии опьянения (+лишение прав, +эвакуация)', f:40000},
+      {n:'3.4', t:'Перевозка грузов без наличия подлинного документа — накладной (+изъятие груза)', f:75000},
+    ],
+    4: [
+      {n:'4.1', t:'Упразднена, ред. от 02.10.2025', f:0},
+      {n:'4.2', t:'Упразднена, ред. от 02.10.2025', f:0},
+      {n:'4.3', t:'Упразднена, ред. от 02.10.2025', f:0},
+      {n:'4.4', t:'Упразднена, ред. от 02.10.2025', f:0},
+    ],
+    5: [
+      {n:'5.1', t:'Пересечение железнодорожного пути вне переезда или выезд при закрытом/закрывающемся шлагбауме', f:50000},
+      {n:'5.2', t:'Повреждение железнодорожного пути посредством заезда или проезда на транспортном средстве', f:25000},
+    ],
+    6: [
+      {n:'6.1', t:'Разворот или движение задним ходом на автомагистрали', f:15000},
+    ],
+    7: [
+      {n:'7.1', t:'Проезд на запрещающий сигнал светофора (красный)', f:30000},
+      {n:'7.2', t:'Невыполнение требования уступить дорогу транспортному средству, пользующемуся преимущественным правом проезда перекрёстков', f:25000},
+    ],
+    8: [
+      {n:'8.1', t:'Невыполнение требования подать сигнал перед началом движения, перестроением, поворотом, разворотом или остановкой', f:5000},
+      {n:'8.2', t:'Разворот или движение задним ходом в местах, где такие манёвры запрещены', f:5000},
+      {n:'8.3', t:'Невыполнение требования уступить дорогу транспортному средству, пользующемуся преимущественным правом движения', f:10000},
+      {n:'8.4', t:'Нарушение правил пользования звуковыми сигналами, аварийной сигнализацией или знаком аварийной остановки', f:10000},
+      {n:'8.5', t:'Опасное вождение (+лишение права управления)', f:17500},
+    ],
+    9: [
+      {n:'9.1', t:'Нарушение правил расположения транспортного средства на проезжей части, встречного разъезда, движение по обочинам', f:10000},
+      {n:'9.2', t:'Движение по велосипедным или пешеходным дорожкам либо тротуарам, газонам', f:15000},
+      {n:'9.3', t:'Выезд в нарушение ПДД на полосу встречного движения (+лишение прав)', f:15000},
+      {n:'9.4', t:'Умышленный выезд на полосу встречного движения (+лишение прав, +эвакуация)', f:30000},
+    ],
+    10: [
+      {n:'10.1', t:'Несоблюдение требований, предписанных дорожными знаками или разметкой проезжей части', f:10000},
+      {n:'10.2', t:'Поворот налево или разворот в нарушение требований дорожных знаков или разметки', f:15000},
+      {n:'10.3', t:'Движение во встречном направлении по дороге с односторонним движением (+лишение прав, +эвакуация)', f:35000},
+    ],
+    11: [
+      {n:'11.1', t:'Непредоставление преимущества в движении маршрутному транспортному средству', f:15000},
+      {n:'11.2', t:'Непредоставление преимущества транспортному средству с включёнными спецсигналами (+лишение прав, +эвакуация)', f:25000},
+      {n:'11.3', t:'Непредоставление преимущества колонне государственных служб с включёнными спецсигналами (+лишение прав, +эвакуация)', f:50000},
+      {n:'11.4', t:'Невыполнение требования ПДД уступить дорогу пешеходам, велосипедистам или иным участникам движения', f:10000},
+    ],
+    12: [
+      {n:'12.1', t:'Нарушение правил остановки, стоянки, парковки транспортных средств (+эвакуация при повторном)', f:25000},
+      {n:'12.2', t:'Нарушение правил остановки/стоянки на проезжей части, повлекшее создание препятствий (+эвакуация)', f:50000},
+    ],
+    13: [
+      {n:'13.1', t:'Движение транспортного средства с выключенными габаритными огнями в любое время суток', f:10000},
+      {n:'13.2', t:'Умышленное использование управляемого заноса (дрифт) на проезжей части', f:50000},
+      {n:'13.3', t:'Пользование водителем во время движения транспортного средства телефоном', f:10000},
+      {n:'13.4', t:'Нарушение правил дорожного движения пешеходом', f:10000},
+      {n:'13.5', t:'Нарушение правил движения транспортных средств в жилых зонах', f:5000},
+      {n:'13.6', t:'Управление ТС со светопропускаемостью стёкол ниже 50%, за исключением ФСБ (+устранение на месте)', f:50000},
+    ],
+    14: [
+      {n:'14.1', t:'Создание ДТП без вреда здоровью и жизни граждан (+лишение прав, +эвакуация)', f:15000},
+      {n:'14.2', t:'Создание ДТП, повлекшего тяжкий вред здоровью (+лишение прав, +эвакуация)', f:25000},
+      {n:'14.3', t:'Создание ДТП, повлекшего смерть человека (+лишение прав, +эвакуация)', f:30000},
+      {n:'14.4', t:'Оставление участником ДТП места дорожно-транспортного происшествия (+лишение прав, +эвакуация)', f:50000},
+      {n:'14.5', t:'Умышленное создание аварийной ситуации со стороны виновника ДТП (+лишение прав, +эвакуация)', f:50000},
+    ],
+    15: [
+      {n:'15.1', t:'Неповиновение законному требованию сотрудника полиции/ФСБ об остановке ТС (+лишение прав, +эвакуация)', f:50000},
+      {n:'15.2', t:'Неповиновение законному требованию о предоставлении документов на ТС или перевозимый груз', f:35000},
+    ],
+    16: [
+      {n:'16.1', t:'Оскорбление — унижение чести и достоинства лица в неприличной форме', f:25000},
+      {n:'16.2', t:'Клевета — распространение заведомо ложных сведений, порочащих честь и достоинство лица', f:20000},
+      {n:'16.3', t:'Дискриминация — ограничение прав и свобод человека на основании какого-либо признака', f:25000},
+      {n:'16.4', t:'Мелкое хулиганство — нецензурная брань в общественных местах', f:10000},
+    ],
+    17: [
+      {n:'17.1', t:'Хранение/перевозка наркотических средств до 2 грамм включительно, употребление в общественных местах', f:35000},
+      {n:'17.2', t:'Занятие проституцией', f:25000},
+      {n:'17.3', t:'Курение в общественных местах', f:5000},
+      {n:'17.4', t:'Распитие спиртных напитков в общественных местах', f:10000},
+    ],
+    18: [
+      {n:'18.1', t:'Организация несанкционированного публичного собрания, митинга, демонстрации или пикетирования', f:50000},
+      {n:'18.2', t:'Участие в несанкционированном публичном собрании, митинге, демонстрации или пикетировании', f:35000},
+      {n:'18.3', t:'Громкое прослушивание музыки во время массовых мероприятий, создающее помехи госорганизациям', f:100000},
+      {n:'18.4', t:'Организация блокирования или активное участие в блокировании транспортных коммуникаций', f:30000},
+      {n:'18.5', t:'Нарушение правил перевозки и транспортирования оружия и патронов к нему', f:20000},
+      {n:'18.6', t:'Хулиганство, а равно нарушение общественного порядка', f:25000},
+      {n:'18.7.1', t:'Нарушение требований пожарной безопасности в ходе учебных проверок инспекционной комиссией', f:750000},
+      {n:'18.7.2', t:'Нарушение требований пожарной безопасности в ходе пожара или иной чрезвычайной ситуации', f:1250000},
+      {n:'18.8', t:'Невыполнение законных требований органов ФСБ в период режима контртеррористической операции', f:175000},
+    ],
+    19: [
+      {n:'19.1', t:'Подкуп избирателей', f:100000},
+      {n:'19.2', t:'Агитация в день тишины, а равно в день выборов', f:200000},
+    ],
+    20: [
+      {n:'20.1', t:'Заведомо ложный вызов специализированных служб', f:25000},
+      {n:'20.2', t:'Дача заведомо ложных показаний или заведомо ложный донос о совершении преступления', f:25000},
+      {n:'20.3', t:'Заведомо ложное сообщение об акте терроризма', f:25000},
+      {n:'20.4', t:'Применение насилия в отношении представителя власти', f:35000},
+      {n:'20.5', t:'Оскорбление представителя власти в неприличной форме', f:50000},
+      {n:'20.6', t:'Неповиновение законному требованию сотрудника полиции, ФСБ или ФСИН', f:40000},
+      {n:'20.7', t:'Проживание по недействительному документу, удостоверяющему личность', f:35000},
+      {n:'20.8', t:'Воспрепятствование законной деятельности органов полиции/ФСБ/ФСИН при несоблюдении дистанции 15 метров', f:75000},
+      {n:'20.9.1', t:'Воспрепятствование деятельности органов МСУ, срыв муниципальной проверки (для граждан)', f:75000},
+      {n:'20.9.2', t:'Воспрепятствование деятельности органов МСУ, срыв муниципальной проверки (для руководства)', f:375000},
+      {n:'20.10.1', t:'Неисполнение актов управления органа МСУ — приказов, распоряжений, постановлений (для граждан)', f:75000},
+      {n:'20.10.2', t:'Неисполнение актов управления органа МСУ — приказов, распоряжений, постановлений (для руководства)', f:375000},
+    ],
+  };
+
+  var state = {
+    screen: 'chapters',
+    targetId: -1,
+    targetName: '',
+    selectedIndex: 0,
+    selectedChapter: null,
+  };
+
+  var dialogTitle = document.getElementById('dialogTitle');
+  var dialogList  = document.getElementById('dialogList');
+  var dialogBtns  = document.getElementById('dialogButtons');
+
+  function formatMoney(n) {
+    return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  }
+
+  function renderButtons(lbl1, fn1, lbl2, fn2) {
+    dialogBtns.innerHTML = '';
+    var b1 = document.createElement('button');
+    b1.className = 'dialog-button btn-primary';
+    b1.textContent = lbl1;
+    b1.onclick = fn1;
+    var b2 = document.createElement('button');
+    b2.className = 'dialog-button btn-secondary';
+    b2.textContent = lbl2;
+    b2.onclick = fn2;
+    dialogBtns.appendChild(b1);
+    dialogBtns.appendChild(b2);
+  }
+
+  function showChapters() {
+    state.screen = 'chapters';
+    state.selectedIndex = 0;
+    dialogTitle.textContent = 'ВЫБЕРИТЕ ГЛАВУ КОАП';
+    renderChapterList();
+    renderButtons('Далее', function() {
+      state.selectedChapter = CHAPTERS[state.selectedIndex];
+      showArticles();
+    }, 'Закрыть', function() {
+      if (typeof cef !== 'undefined') cef.emit('ticket:close');
+    });
+  }
+
+  function renderChapterList() {
+    dialogList.innerHTML = '';
+    CHAPTERS.forEach(function(ch, i) {
+      var item = document.createElement('div');
+      item.className = 'dialog-list-item' + (i === state.selectedIndex ? ' selected' : '');
+      item.innerHTML = '<span class="item-text">' + ch.title + '</span>';
+      item.onclick = function() { state.selectedIndex = i; renderChapterList(); };
+      item.ondblclick = function() { state.selectedIndex = i; state.selectedChapter = ch; showArticles(); };
+      dialogList.appendChild(item);
+    });
+  }
+
+  function showArticles() {
+    state.screen = 'articles';
+    state.selectedIndex = 0;
+    dialogTitle.textContent = 'ВЫБЕРИТЕ СТАТЬЮ';
+    renderArticleList();
+    renderButtons('Выписать', function() {
+      var arts = ARTICLES[state.selectedChapter.id] || [];
+      if (!arts[state.selectedIndex]) return;
+      var art = arts[state.selectedIndex];
+      if (art.f === 0) return;
+      if (typeof cef !== 'undefined') {
+        cef.emit('ticket:confirm', art.n, art.t, art.f);
+      }
+    }, 'Назад', showChapters);
+  }
+
+  function renderArticleList() {
+    dialogList.innerHTML = '';
+    var arts = ARTICLES[state.selectedChapter.id] || [];
+    arts.forEach(function(art, i) {
+      var item = document.createElement('div');
+      item.className = 'dialog-list-item' + (i === state.selectedIndex ? ' selected' : '');
+      item.innerHTML = '<span class="item-label">Ст.' + art.n + ' КоАП:</span>'
+        + '<span class="item-text"> ' + art.t + '</span>'
+        ;
+      item.onclick = function() { state.selectedIndex = i; renderArticleList(); };
+      item.ondblclick = function() {
+        state.selectedIndex = i;
+        var a = arts[i];
+        if (a.f > 0 && typeof cef !== 'undefined') cef.emit('ticket:confirm', a.n, a.t, a.f);
+      };
+      dialogList.appendChild(item);
+    });
+  }
+
+  document.addEventListener('keydown', function(e) {
+    var len = state.screen === 'chapters' ? CHAPTERS.length : (ARTICLES[state.selectedChapter ? state.selectedChapter.id : 1] || []).length;
+    if (e.keyCode === 38 && state.selectedIndex > 0) {
+      state.selectedIndex--;
+      state.screen === 'chapters' ? renderChapterList() : renderArticleList();
+    } else if (e.keyCode === 40 && state.selectedIndex < len - 1) {
+      state.selectedIndex++;
+      state.screen === 'chapters' ? renderChapterList() : renderArticleList();
+    } else if (e.keyCode === 27) {
+      if (state.screen === 'articles') showChapters();
+      else if (typeof cef !== 'undefined') cef.emit('ticket:close');
+    }
+  });
+
+  if (typeof cef !== 'undefined') {
+    cef.on('ticket:open', function(targetId, targetName) {
+      state.targetId   = targetId;
+      state.targetName = targetName;
+      showChapters();
+    });
+  } else {
+    // Тест без CEF
+    state.targetId = 0;
+    state.targetName = 'Matvei_Gordon';
+    showChapters();
+  }
+</script>
+</body>
+</html>

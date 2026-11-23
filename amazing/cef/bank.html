@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bank.css">
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+</head>
+<body>
+    <div id="atm-main" style="display: none;">
+        <div class="atm-bg"></div>
+        
+        <div id="atm-wrapper">
+            <!-- Баланс по центру -->
+            <div class="balance-section">
+                <div class="balance-label">Баланс счета:</div>
+                <div id="bank-balance" class="balance-value">0 P</div>
+            </div>
+
+            <!-- Быстрые суммы (Серые блоки) -->
+            <div class="quick-row">
+                <div class="q-item" onclick="sendAction(1, 14853981)">Снять 14 853 981 P</div>
+                <div class="q-item" onclick="sendAction(2, 352808)">Положить 352 808 P</div>
+                <div class="q-item" onclick="sendAction(1, 100000)">Снять 100 000 P</div>
+                <div class="q-item" onclick="sendAction(2, 100000)">Положить 100 000 P</div>
+            </div>
+
+            <!-- Сетка широких карточек -->
+            <div class="cards-grid">
+                <div class="card active" onclick="openInput(1)">
+                    <div class="icon-circle c-green">↓</div>
+                    <div class="card-title">Снять деньги<br>со счета</div>
+                </div>
+                <div class="card" onclick="openInput(2)">
+                    <div class="icon-circle c-green">+</div>
+                    <div class="card-title">Положить деньги<br>на счет</div>
+                </div>
+                <div class="card" onclick="sendAction(4, 0)">
+                    <div class="icon-circle c-blue">💳</div>
+                    <div class="card-title">Просмотреть<br>свои штрафы</div>
+                </div>
+                <div class="card" onclick="openInput(5)">
+                    <div class="icon-circle c-red">!</div>
+                    <div class="card-title">Оплатить<br>штраф</div>
+                </div>
+                <div class="card" onclick="openInput(6, 0)">
+                    <div class="icon-circle c-dark-red">!!</div>
+                    <div class="card-title">Оплатить<br>все штрафы</div>
+                </div>
+                <div class="card" onclick="openInput(3)">
+                    <div class="icon-circle c-orange">📱</div>
+                    <div class="card-title">Пополнить<br>баланс связи</div>
+                </div>
+            </div>
+
+            <!-- Подсказки клавиш -->
+            <div class="footer-hints">
+				<div class="hint-item"><span>Esc</span> Выход</div>
+				<div class="hint-item"><span>Q</span> <span>E</span> Управление</div>
+				<div class="hint-item"><span>Enter</span> Выбрать</div>
+			</div>
+        </div>
+
+        <!-- Модальное окно -->
+        <!-- Окно ввода (Модалка) -->
+		<div id="modal-bg" style="display: none;">
+			<div class="modal-window">
+				<!-- Заголовок ВСЕГДА сверху -->
+				<h3 id="modal-title">Оплатить штраф</h3>				
+				<!-- Блок 1: Статистика всех штрафов (тип 6) -->
+				<div id="modal-info-all-fines" style="display: none; margin-bottom: 25px;">
+					<div class="fine-row"><span>Штрафов:</span> <b class="c-orange" id="fines-count">0</b></div>
+					<div class="fine-row"><span>Сумма без скидки:</span> <b id="fines-sum">0 P</b></div>
+					<div class="fine-spacer"></div>
+					<div class="fine-row"><span>Штрафы со скидкой:</span> <b class="c-orange" id="fines-sale-count">0</b></div>
+					<div class="fine-row"><span>Сумма со скидкой:</span> <b class="c-green-text" id="fines-sale-sum">0 P</b></div>
+				</div>
+				<!-- Блок 2: Баланс (тип 1, 2, 3) -->
+				<div id="modal-info-money" class="modal-balance-info" style="display: none;">
+					<div class="m-label">💳 Баланс счета:</div>
+					<div id="modal-balance-val">0 P</div>
+				</div>
+				<!-- Блок 3: Подзаголовок для одного штрафа (тип 5) -->
+				<div id="modal-info-fine" style="display: none;">
+					<div class="m-subtitle">Введите номер штрафа</div>
+					<p class="m-description">
+						Информацию можно посмотреть в отдельном меню на главной странице банкомата
+					</p>
+				</div>
+				<!-- Поле ввода (скрывается для типа 6) -->
+				<input type="number" id="sum-field" placeholder="Нажмите для ввода">				
+				<!-- Быстрые суммы (скрываются для штрафов) -->
+				<div id="modal-quick-btns" class="modal-quick-amounts" style="display: none;">
+					<button onclick="setSum(100000)">100 тыс.</button>
+					<button onclick="setSum(250000)">250 тыс.</button>
+					<button onclick="setSum(500000)">500 тыс.</button>
+				</div>
+				<!-- Главная кнопка -->
+				<button id="modal-main-btn" class="b-confirm-main" onclick="confirmSum()">Оплатить</button>
+				<!-- Кнопка Назад -->
+				<div class="modal-back-btn" onclick="closeInput()">
+					<span>< Назад</span>
+				</div>
+			</div>
+		</div>
+    </div>
+    <script src="script/bank.js"></script>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amazing Online - Обыск игрока</title>
+<style>
+  @font-face { font-family: 'Proxima Nova Bold'; src: url('css/fonts/ProximaNova-Bold.ttf') format('truetype'); font-weight: bold; font-style: normal; }
+  @font-face { font-family: "Gotham-Medium"; src: url("css/fonts/Gotham Pro Medium.ttf"); }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width:100vw; height:100vh; overflow:hidden; background-color:transparent; font-family:'Proxima Nova Bold',sans-serif; }
+
+  .dialog:focus { outline: none; }
+  .dialog {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(1.5);
+    transform-origin: center;
+    background: linear-gradient(to bottom right, #1a1a1c, #201f24);
+    border: 1px solid #444;
+    border-radius: 5px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    min-width: 450px;
+    max-width: 800px;
+    z-index: 1000;
+    color: #fff;
+    user-select: none;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+  .dialog::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(to bottom, rgba(26,26,28,0.6) 0%, rgba(32,31,36,0.1) 100%), url('../images/background.svg');
+    z-index: -1;
+  }
+
+  .dialog-header {
+    padding: 10px 20px;
+    cursor: move;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .dialog-header::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(255,255,255,0.25), rgba(255,255,255,0));
+    align-self: center;
+    margin-top: 10px;
+    margin-left: 5px;
+  }
+  .dialog-title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #e69348;
+    text-transform: uppercase;
+    font-family: "Gotham-Medium", sans-serif;
+    margin-top: 10px;
+    letter-spacing: 0.155vh;
+  }
+
+  .col-headers {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px 6px 20px;
+  }
+  .col-headers span {
+    font-family: 'Proxima Nova Bold', sans-serif;
+    font-size: 13px;
+    color: #888;
+  }
+
+  .dialog-content {
+    padding: 0 20px 10px 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .dialog-content::-webkit-scrollbar { width: 6px; }
+  .dialog-content::-webkit-scrollbar-thumb { background-color: #e69348; border-radius: 3px; border: 2px solid #1a1a1c; }
+
+  .dialog-tablist { display: flex; flex-direction: column; gap: 4px; }
+
+  .dialog-tablist .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 2px;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: rgba(0,0,0,0.5);
+  }
+  .dialog-tablist .row .cell {
+    font-family: 'Proxima Nova Bold', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    flex: 1;
+    padding: 4px 6px;
+  }
+  .dialog-tablist .row .cell.quantity {
+    color: #e69348;
+    font-weight: bold;
+    flex: 0;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .dialog-tablist .row .cell.quantity.zero { color: #777; }
+
+  .dialog-tablist .row.category {
+    background: transparent;
+    cursor: default;
+    padding: 10px 0 4px 0;
+    margin-top: 4px;
+    border-bottom: 1px solid rgba(230,147,72,0.15);
+  }
+  .dialog-tablist .row.category .cell { font-size: 13px; color: #ccc; font-weight: bold; }
+
+  .dialog-tablist .row.selected {
+    background-color: #e69348 !important;
+    box-shadow: 0 0 5px rgba(230,147,72,0.5);
+  }
+  .dialog-tablist .row.selected .cell { color: #2e302b !important; }
+  .dialog-tablist .row.selected .cell.quantity { color: #2e302b !important; }
+  .dialog-tablist .row.disabled { opacity: 0.55; cursor: not-allowed; }
+
+  .dialog-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .dialog-button {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 1.5px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-family: 'Proxima Nova Bold', sans-serif;
+    letter-spacing: 0.08em;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, box-shadow 0.2s;
+    margin-bottom: 10px;
+  }
+  .dialog-button:disabled { opacity: 0.35; cursor: not-allowed; background-image: none !important; background-color: #3f3f41 !important; box-shadow: none !important; color: #666 !important; }
+  .dialog-button-primary { background-image: linear-gradient(to right, #21a24d, #5fda55); color: #fff; box-shadow: 0 1.5px 0 #2d682f; }
+  .dialog-button-primary:hover:not(:disabled) { box-shadow: 0 1.5px 0 #2d682f, 0 3px 2px rgba(70,180,76,0.3); }
+  .dialog-button-middle { background-color: #2196f3; color: #fff; box-shadow: 0 1.5px 0 #092842; }
+  .dialog-button-middle:hover:not(:disabled) { box-shadow: 0 1.5px 0 #092842, 0 3px 2px rgba(16,79,131,0.3); }
+  .dialog-button-secondary { background-color: #3f3f41; opacity: 0.7; color: #fff; outline: 0.1px solid rgba(255,255,255,0.3); }
+  .dialog-button-secondary:hover { outline: 0.3px solid rgba(255,255,255,0.4); opacity: 1; }
+</style>
+</head>
+<body>
+<div id="dialog-container">
+  <div class="dialog" id="frisk-window" tabindex="0">
+    <div class="dialog-header" id="frisk-header">
+      <div class="dialog-title" id="frisk-title">Обыск игрока</div>
+    </div>
+    <div class="col-headers">
+      <span>Предмет</span>
+      <span>Количество</span>
+    </div>
+    <div class="dialog-content">
+      <div class="dialog-tablist" id="items-wrapper"></div>
+    </div>
+    <div class="dialog-buttons">
+      <button class="dialog-button dialog-button-primary"   id="btn-seize-item" disabled>ИЗЪЯТЬ</button>
+      <button class="dialog-button dialog-button-middle"    id="btn-seize-all"  disabled>ИЗЪЯТЬ ВСЕ</button>
+      <button class="dialog-button dialog-button-secondary" id="btn-close">ЗАКРЫТЬ</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
+  let selectedItemId = -1;
+  let itemsData = [];
+
+  const dialog       = document.getElementById("frisk-window");
+  const header       = document.getElementById("frisk-header");
+  const itemsWrapper = document.getElementById("items-wrapper");
+  const btnSeizeItem = document.getElementById("btn-seize-item");
+  const btnSeizeAll  = document.getElementById("btn-seize-all");
+  const btnClose     = document.getElementById("btn-close");
+  const friskTitle   = document.getElementById("frisk-title");
+
+  // Перетаскивание
+  header.onmousedown = (e) => {
+    isDragging = true;
+    const r = dialog.getBoundingClientRect();
+    dragOffsetX = e.clientX - r.left;
+    dragOffsetY = e.clientY - r.top;
+  };
+  document.onmousemove = (e) => {
+    if (!isDragging) return;
+    dialog.style.transform = "scale(1.5) translate(0,0)";
+    dialog.style.transformOrigin = "top left";
+    dialog.style.left = (e.clientX - dragOffsetX) + "px";
+    dialog.style.top  = (e.clientY - dragOffsetY) + "px";
+  };
+  document.onmouseup = () => { isDragging = false; };
+
+  // Статичные предметы всегда 0
+  const STATIC_ITEMS = [
+    { name: "Зеленый чай",   quantity: "0 гр.",  canSeize: false },
+    { name: "Мятная пудра",  quantity: "0 гр.",  canSeize: false },
+    { name: "Патроны",       quantity: "0 шт.",  canSeize: false },
+    { name: "Материалы",     quantity: "0 ед.",  canSeize: false },
+  ];
+
+  function initFriskWindow(targetName, jsonItems) {
+    try {
+      itemsData = typeof jsonItems === "string" ? JSON.parse(jsonItems) : jsonItems;
+    } catch(e) { itemsData = []; }
+    friskTitle.textContent = "Обыск: " + targetName;
+    renderItems();
+    if (typeof cef !== 'undefined') cef.emit("game:showCursor", 1);
+  }
+
+  function renderItems() {
+    itemsWrapper.innerHTML = "";
+    selectedItemId = -1;
+    btnSeizeItem.disabled = true;
+
+    // Статичные предметы
+    STATIC_ITEMS.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "row disabled";
+      row.innerHTML = '<div class="cell">' + item.name + '</div><div class="cell quantity zero">' + item.quantity + '</div>';
+      itemsWrapper.appendChild(row);
+    });
+
+    // Оружие из сервера
+    let hasSeizable = false;
+    itemsData.forEach(item => {
+      const row = document.createElement("div");
+      if (item.isCategory) {
+        row.className = "row category";
+        row.innerHTML = '<div class="cell">' + item.name + '</div><div></div>';
+      } else {
+        row.className = "row" + (item.canSeize ? "" : " disabled");
+        const isZero = /^0\s/.test(item.quantity);
+        const qClass = "cell quantity" + (isZero ? " zero" : "");
+        const nameLabel = item.isWeapon ? "— " + item.name : item.name;
+        row.innerHTML = '<div class="cell">' + nameLabel + '</div><div class="' + qClass + '">' + item.quantity + '</div>';
+        if (item.canSeize) {
+          hasSeizable = true;
+          row.onclick = () => selectRow(row, item.id ?? -1);
+        }
+      }
+      itemsWrapper.appendChild(row);
+    });
+
+    btnSeizeAll.disabled = !hasSeizable;
+  }
+
+  function selectRow(row, id) {
+    itemsWrapper.querySelectorAll(".row").forEach(r => r.classList.remove("selected"));
+    row.classList.add("selected");
+    selectedItemId = id;
+    btnSeizeItem.disabled = false;
+  }
+
+  btnSeizeItem.onclick = () => { if (selectedItemId !== -1) emit("frisk:click", 1, selectedItemId); };
+  btnSeizeAll.onclick  = () => emit("frisk:click", 2, 0);
+  btnClose.onclick     = () => emit("frisk:click", 0, 0);
+
+  function emit(event, ...args) {
+    if (typeof cef !== 'undefined') cef.emit(event, ...args);
+  }
+
+  window.addEventListener("keydown", e => { if (e.key === "Escape") btnClose.click(); });
+
+  if (typeof cef !== 'undefined') {
+    cef.on('frisk:init', function(targetName, jsonItems) {
+      initFriskWindow(targetName, jsonItems);
+    });
+  } else {
+    initFriskWindow("Test_Player", [
+      { name: "Оружие", isCategory: true, canSeize: false },
+      { id: 29, name: "MP5", quantity: "150 пт.", isCategory: false, isWeapon: true, canSeize: true },
+      { id: 24, name: "Desert Eagle", quantity: "42 пт.", isCategory: false, isWeapon: true, canSeize: true }
+    ]);
+  }
+</script>
+</body>
+</html>

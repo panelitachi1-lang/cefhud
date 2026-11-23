@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-user-select:none;user-select:none;}
+html,body{width:100%;height:100%;background:transparent;overflow:hidden;font-family:'Arial',sans-serif;}
+#root{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+#target-label{position:fixed;top:50%;left:50%;transform:translate(-50%,-185px);color:#fff;font-size:13px;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.8);text-align:center;pointer-events:none;display:none;}
+#target-label span{color:#e89040;font-size:15px;display:block;margin-top:2px;}
+#wrap{position:relative;width:500px;height:500px;pointer-events:none;}
+@keyframes show{from{transform:scale(.35);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes hide{from{transform:scale(1);opacity:1}to{transform:scale(.35);opacity:0}}
+svg#svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;}
+.sec{fill:rgba(153,153,153,0.35);stroke:none;cursor:pointer;transition:fill .12s;pointer-events:all;}
+.sec:hover,.sec.hot{fill:rgba(230,142,58,.90);}
+.sec.flash{fill:rgba(255,165,75,1);}
+.sec.empty{fill:rgba(100,100,100,0.15);pointer-events:none;cursor:default;}
+.lbl{position:absolute;transform:translate(-50%,-50%);pointer-events:none;text-align:center;color:#fff;font-size:11px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.9);line-height:1.3;width:72px;}
+.lbl.hot{color:#ffe0b2;}
+.lbl.empty-lbl{opacity:0.3;}
+#btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:220px;border-radius:50%;background:rgba(230,142,58,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;pointer-events:all;z-index:20;transition:background .13s,transform .11s;}
+#btn:hover{background:rgba(245,155,65,1);transform:translate(-50%,-50%) scale(1.03);}
+#btn:active{transform:translate(-50%,-50%) scale(.97);}
+#btn-label{color:#fff;font-size:16px;font-weight:700;text-shadow:0 1px 4px rgba(0,0,0,.3);transition:opacity .12s;text-align:center;padding:0 10px;}
+#btn-hint{color:rgba(255,255,255,.9);font-size:11px;font-weight:600;min-height:14px;text-align:center;padding:0 12px;}
+.btn-row{display:flex;align-items:center;gap:6px;color:#fff;font-size:12px;font-weight:600;}
+.dot{width:8px;height:8px;border-radius:50%;background:#fff;flex-shrink:0;}
+</style>
+</head>
+<body>
+<div id="target-label">Взаимодействие с<span id="target-name"></span></div>
+<div id="root">
+  <div id="wrap">
+    <svg id="svg" viewBox="0 0 500 500"></svg>
+    <div id="btn">
+      <div id="btn-label">Закрыть</div>
+      <div id="btn-hint"></div>
+      <div class="btn-row"><div class="dot"></div><span id="txt-select">Выбрать</span></div>
+      <div class="btn-row"><div class="dot"></div><span id="txt-back">Закрыть</span></div>
+    </div>
+  </div>
+</div>
+<script>
+const CX=250,CY=250,R_IN=120,R_OUT=240,R_LBL=182;
+const ns='http://www.w3.org/2000/svg';
+const svgEl=document.getElementById('svg');
+const wrap=document.getElementById('wrap');
+const rad=d=>d*Math.PI/180;
+const pt=(r,a)=>({x:CX+r*Math.cos(rad(a-90)),y:CY+r*Math.sin(rad(a-90))});
+
+let mode='radial';
+let level=0;
+let currentItems=[];
+
+const RAD_MAIN=[
+  {id:'fraction', label:'Фракция',   angle:0,       sub:'fraction'},
+  {id:'gps',      label:'GPS',       angle:45,      cmd:'/gps'},
+  {id:'status',   label:'Статус',    angle:90,      cmd:'/time'},
+  {id:'anim',     label:'Анимации',  angle:135,     cmd:'/anim'},
+  {id:'mask',     label:'Маска',     angle:180,     cmd:'/mask'},
+  {id:'energy',   label:'Энергия',   angle:225},
+  {id:'med',      label:'Аптечка',   angle:270,     cmd:'/drags'},
+  {id:'health',   label:'Здоровье',  angle:315,     cmd:'/heal'},
+];
+
+const RAD_FRACTION={
+  title:'Фракция',
+  items:[
+    {id:'interact', label:'Взаимо-\nдействие', angle:0,   sub:'interact_main'},
+    {id:'sos',      label:'SOS',               angle:51,  cmd:'/sos'},
+    {id:'info',     label:'Инфо',              angle:103},
+    {id:'apps',     label:'Приложения',        angle:154},
+    {id:'rank',     label:'Звание',            angle:206},
+    {id:'accept',   label:'Принять',           angle:257},
+    {id:'rate',     label:'Рейтинг',           angle:309},
+  ]
+};
+
+const INT_MAIN=[
+  {id:'udo',    label:'Освободить', angle:0,         cmd:'/udo'},
+  {id:'cuff',   label:'Наручники',  angle:360/7,     cmd:'/cuff'},
+  {id:'frisk',  label:'Обыск',      angle:360/7*2,   cmd:'/frisk'},
+  {id:'escort', label:'Конвой',     angle:360/7*3,   cmd:'/escort'},
+  {id:'deject', label:'Отпустить',  angle:360/7*4,   cmd:'/deject'},
+  {id:'other',  label:'Прочее',     angle:360/7*5,   sub:'other'},
+  {id:'admin',  label:'Адм.\nответ-ть', angle:360/7*6, sub:'admin'},
+];
+
+const INT_ADMIN={
+  title:'Адм. ответственность',
+  items:[
+    {id:'ticket', label:'Штраф',  angle:0,   cmd:'/ticket'},
+    {id:'arrest', label:'Арест',  angle:120, cmd:'/arrest'},
+    {id:'su',     label:'Розыск', angle:240, cmd:'/su'},
+  ]
+};
+
+const INT_OTHER={
+  title:'Прочее',
+  items:[
+    {id:'arrest2', label:'Арест',  angle:0,   cmd:'/arrest'},
+    {id:'su2',     label:'Розыск', angle:180, cmd:'/su'},
+  ]
+};
+
+function makeSectorPath(ca,n){
+  const step=360/n;
+  const s=ca-step/2,e=ca+step/2,lg=(e-s)>180?1:0;
+  const p1=pt(R_IN,s),p2=pt(R_OUT,s),p3=pt(R_OUT,e),p4=pt(R_IN,e);
+  return `M${p1.x} ${p1.y} L${p2.x} ${p2.y} A${R_OUT} ${R_OUT} 0 ${lg} 1 ${p3.x} ${p3.y} L${p4.x} ${p4.y} A${R_IN} ${R_IN} 0 ${lg} 0 ${p1.x} ${p1.y}Z`;
+}
+
+function renderMenu(items,title,isBack){
+  currentItems=items;
+  svgEl.innerHTML='';
+  wrap.querySelectorAll('.lbl').forEach(e=>e.remove());
+  const N=items.length;
+  const bg=document.createElementNS(ns,'circle');
+  bg.setAttribute('cx',CX);bg.setAttribute('cy',CY);bg.setAttribute('r',245);
+  bg.setAttribute('fill','rgba(153,153,153,0.45)');bg.setAttribute('pointer-events','none');
+  svgEl.appendChild(bg);
+  items.forEach((d,i)=>{
+    const p=document.createElementNS(ns,'path');
+    p.setAttribute('d',makeSectorPath(d.angle,N));
+    p.setAttribute('class',d.empty?'sec empty':'sec');
+    p.dataset.i=i;
+    svgEl.appendChild(p);
+    if(!d.empty){
+      p.addEventListener('mouseenter',()=>hot(i,true));
+      p.addEventListener('mouseleave',()=>hot(i,false));
+      p.addEventListener('click',()=>pick(d,i));
+    }
+    const lp=pt(R_LBL,d.angle);
+    const div=document.createElement('div');
+    div.className='lbl'+(d.empty?' empty-lbl':'');
+    div.dataset.i=i;
+    div.style.left=lp.x+'px';
+    div.style.top=lp.y+'px';
+    div.innerHTML=d.label.replace(/\n/g,'<br>');
+    wrap.appendChild(div);
+  });
+  document.getElementById('btn-label').textContent=title;
+  document.getElementById('btn-hint').textContent='';
+  document.getElementById('btn-label').style.opacity='1';
+  document.getElementById('txt-select').textContent='Выбрать';
+  document.getElementById('txt-back').textContent=isBack?'Назад':'Закрыть';
+  document.getElementById('btn').onclick=isBack?goBack:close_;
+}
+
+function hot(i,on){
+  document.querySelectorAll(`[data-i="${i}"]`).forEach(el=>{
+    if(el.classList.contains('sec')) el.classList.toggle('hot',on);
+    if(el.classList.contains('lbl')) el.classList.toggle('hot',on);
+  });
+  const lbl=document.getElementById('btn-label');
+  if(on) lbl.style.opacity='.5';
+  else lbl.style.opacity='1';
+}
+
+function emit(event, data){
+  if(typeof cef!=='undefined') cef.emit(event, data||'');
+  else console.log('[CEF]', event, data||'');
+}
+
+function pick(d,i){
+  if(d.empty) return;
+  if(d.sub){
+    level=1;
+    if(d.sub==='fraction')      renderMenu(RAD_FRACTION.items, RAD_FRACTION.title, true);
+    if(d.sub==='interact_main'){ mode='interact'; renderMenu(INT_MAIN,'Закрыть',true); }
+    if(d.sub==='admin')         renderMenu(INT_ADMIN.items, INT_ADMIN.title, true);
+    if(d.sub==='other')         renderMenu(INT_OTHER.items, INT_OTHER.title, true);
+    return;
+  }
+  if(!d.cmd) return;
+  document.querySelectorAll(`[data-i="${i}"]`).forEach(el=>{
+    el.classList.add('flash');
+    setTimeout(()=>el.classList.remove('flash'),160);
+  });
+  if(mode==='radial'){
+    emit('radmenu:select', d.cmd);
+  } else {
+    emit('interact:select', d.cmd);
+  }
+}
+
+function goBack(){
+  level=0;
+  if(mode==='interact') renderMenu(INT_MAIN,'Закрыть',false);
+  else { mode='radial'; renderMenu(RAD_MAIN,'Закрыть',false); }
+}
+
+function close_(){
+  if(mode==='radial') emit('radmenu:close');
+  else emit('interact:close');
+}
+
+if(typeof cef!=='undefined'){
+  cef.on('radmenu:open',()=>{
+    mode='radial'; level=0;
+    document.getElementById('target-label').style.display='none';
+    wrap.style.animation='none'; void wrap.offsetWidth;
+    wrap.style.animation='show .22s cubic-bezier(.34,1.5,.64,1) forwards';
+    renderMenu(RAD_MAIN,'Закрыть',false);
+  });
+  cef.on('interact:open',json=>{
+    try{
+      const d=JSON.parse(json);
+      document.getElementById('target-name').textContent=d.name+' ['+d.id+']';
+    }catch(e){}
+    mode='interact'; level=0;
+    document.getElementById('target-label').style.display='block';
+    wrap.style.animation='none'; void wrap.offsetWidth;
+    wrap.style.animation='show .22s cubic-bezier(.34,1.5,.64,1) forwards';
+    renderMenu(INT_MAIN,'Закрыть',false);
+  });
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') level>0?goBack():close_();
+  if((e.key==='r'||e.key==='R')&&mode==='radial') close_();
+});
+document.addEventListener('contextmenu',e=>e.preventDefault());
+renderMenu(RAD_MAIN,'Закрыть',false);
+</script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+/* ГЛОБАЛЬНЫЕ СТИЛИ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    background: transparent;
+    font-family: Arial, sans-serif;
+    color: white;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* HUD КОНТЕЙНЕР */
+.hud {
+    position: absolute;
+    top: .6vw;
+    right: .6vw;
+    width: 18vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    transform: scale(.68);
+    transform-origin: top right;
+}
+
+/* ВЕРХНЯЯ ЛИНИЯ (НИК И ID) */
+.top-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Выравнивание элементов по правому краю */
+    gap: .4vw;
+    padding: .4vw .65vw;
+    border-radius: .45vw;
+    background: rgba(0, 0, 0, .20);
+    border: 1px solid rgba(255, 255, 255, .14);
+    backdrop-filter: blur(.25vw);
+    box-shadow: 0 0 .8vw rgba(0, 0, 0, .35);
+}
+
+/* НИКНЕЙМ */
+.nickname {
+    font-size: 1.15vw;
+    font-weight: 800;
+    text-shadow: 0 0 .35vw rgba(0, 0, 0, .9);
+    white-space: nowrap; /* Чтобы ник не переносился на новую строку */
+}
+
+/* ID ИГРОКА */
+.lvl {
+    min-width: 1.9vw;
+    height: 1.6vw;
+    padding: 0 .45vw;
+    border-radius: .3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: .9vw;
+    font-weight: 900;
+    box-shadow: 0 0 .4vw rgba(0, 0, 0, .4);
+}
+
+.lvl.player {
+    background: #ffd400;
+    color: black;
+}
+
+.lvl.admin {
+    background: #ff2b2b;
+    color: white;
+}
+
+/* ЦЕНТР (ВРЕМЯ И ЛОГО) */
+.center-block {
+    margin-top: .55vw;
+    display: flex;
+    align-items: center;
+    gap: .7vw;
+}
+
+.time-block {
+    text-align: right;
+}
+
+.time {
+    font-size: 2.9vw;
+    font-weight: 900;
+    line-height: 1;
+    text-shadow: 0 0 .7vw rgba(0, 0, 0, .9);
+}
+
+.date {
+    margin-top: .08vw;
+    font-size: .9vw;
+    text-shadow: 0 0 .3vw rgba(0, 0, 0, .8);
+}
+
+/* ЛОГОТИП */
+.logo-block {
+    display: flex;
+    align-items: center;
+    gap: .5vw;
+}
+
+.flag {
+    width: .25vw;
+    height: 3.9vw;
+    border-radius: 2vw;
+    background: linear-gradient(
+        to bottom,
+        white 33%,
+        #0044ff 33%,
+        #0044ff 66%,
+        #ff003c 66%
+    );
+    box-shadow: 0 0 .4vw rgba(0, 0, 0, .5);
+}
+
+.project {
+    font-size: 1.5vw;
+    font-weight: 900;
+    line-height: .88;
+    text-transform: uppercase;
+    text-shadow: 0 0 .45vw rgba(0, 0, 0, .9);
+}
+
+/* СТАТИСТИКА (ХП И БРОНЯ) */
+.stats {
+    margin-top: .8vw;
+    width: 100%;
+    /* Добавляем плавность для скрытия/показа */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.stat-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .45vw;
+    margin-top: .5vw;
+    min-height: 1vw;
+}
+
+.bar {
+    position: relative;
+    width: 11.5vw;
+    height: .72vw;
+    border-radius: 2vw;
+    background: rgba(255, 255, 255, .10);
+    border: 1px solid rgba(255, 255, 255, .15);
+    box-shadow: 0 0 .5vw rgba(0, 0, 0, .35);
+}
+
+/* ПОЛОСКИ ЗАПОЛНЕНИЯ */
+.fill {
+    height: 100%;
+    border-radius: 2vw;
+    transition: width .25s ease;
+    width: 100%;
+}
+
+/* БРОНЯ */
+.armor-fill {
+    position: relative;
+    background: #ffffff; 
+    box-shadow: 0 0 .8vw rgba(255, 255, 255, 0.9);
+    border-right: .08vw solid #ffffff;
+}
+
+/* ЗДОРОВЬЕ */
+.hp-fill {
+    background: #ff0048;
+    box-shadow: 0 0 .7vw rgba(255, 0, 72, .95);
+    border-right: .08vw solid #ff0048;
+}
+
+/* ТОЧКА НА БРОНЕ */
+.dot {
+    position: absolute;
+    right: 0vw;
+    top: 50%;
+    width: .45vw;
+    height: .45vw;
+    border-radius: 50%;
+    background: white;
+    transform: translateY(-50%);
+}
+
+/* ИКОНКИ И ЦИФРЫ */
+.icon {
+    width: 1.2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.15vw;
+    font-weight: 900;
+    text-shadow: 0 0 .3vw rgba(0, 0, 0, .8);
+}
+
+.value {
+    width: 1.8vw;
+    text-align: left;
+    font-size: 1vw;
+    font-weight: 900;
+    text-shadow: 0 0 .3vw rgba(0, 0, 0, .8);
+}
+
+.hp-icon, .hp-value {
+    color: #ff0048;
+}
+
+/* БЛОК ДЕНЕГ */
+.money-block {
+    margin-top: .85vw;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Деньги прижимаем вправо */
+    padding: .4vw .65vw;
+    border-radius: .45vw;
+    background: rgba(0, 0, 0, .20);
+    border: 1px solid rgba(255, 255, 255, .14);
+    backdrop-filter: blur(.25vw);
+    box-shadow: 0 0 .8vw rgba(0, 0, 0, .35);
+    /* Добавляем плавность для скрытия/показа */
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.money {
+    font-size: 1.8vw;
+    font-weight: 900;
+    text-shadow: 0 0 .35vw rgba(0, 0, 0, .9);
+}
+
+.currency {
+    margin-left: .45vw;
+    font-size: 1.6vw;
+    font-weight: 900;
+    text-shadow: 0 0 .35vw rgba(0, 0, 0, .9);
+}
+
+/* ==========================================================================
+   МЕХАНИКА СКРЫТИЯ ДЛЯ РЕЖИМА АВТОРИЗАЦИИ
+   ========================================================================== */
+.hud.auth-mode .stats,
+.hud.auth-mode .money-block {
+    opacity: 0;
+    pointer-events: none; /* Отключаем кликабельность в скрытом состоянии */
+    transform: translateY(-1vw); /* Элементы плавно уедут немного вверх и растворятся */
+}

@@ -1,0 +1,1107 @@
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[17:03:55] filterscripts = ""  (string)
+[17:03:55] 
+[17:03:55] Server Plugins
+[17:03:55] --------------
+[17:03:55]  Loading plugin: crashdetect.so
+[17:03:55]   CrashDetect plugin 4.19.4
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: CRP.so
+[17:03:55] 
+
+[17:03:55] ______________________________________
+
+[17:03:55]  Convert Rus To Pwn v0.1.1 loaded
+[17:03:55] ______________________________________
+
+[17:03:55]  By: Fro (c) Copyright <TBG> 2009-2011
+[17:03:55] ______________________________________
+
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: mysql_static.so
+[17:03:55]  >> plugin.mysql: R39-6 successfully loaded.
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: pawncmd.so
+[17:03:55] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: sscanf.so
+[17:03:55] 
+
+[17:03:55]  ===============================
+
+[17:03:55]       sscanf plugin loaded.     
+
+[17:03:55]          Version:  2.8.3        
+
+[17:03:55]   (c) 2018 Alex "Y_Less" Cole  
+
+[17:03:55]  ===============================
+
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: pawnregex.so
+[17:03:55] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: streamer.so
+[17:03:55] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: vehiclesIdFix.so
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: cef.so
+[17:03:55]   Loaded.
+[17:03:55]  Loading plugin: sampvoice.so
+[17:03:55] [sv:dbg:network:init] : module initializing...
+[17:03:55] [dbg:raknet:init] : module initializing...
+[17:03:55] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[17:03:55] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[17:03:55] [dbg:raknet:init] : module initialized
+[17:03:55] [sv:dbg:network:init] : module initialized
+[17:03:55]  -------------------------------------------    
+[17:03:55]    ___                __   __    _              
+[17:03:55]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[17:03:55]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[17:03:55]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[17:03:55]                   |_|                           
+[17:03:55]  -------------------------------------------    
+[17:03:55]            SampVoice by MOR loaded              
+[17:03:55]  -------------------------------------------    
+[17:03:55]   Loaded.
+[17:03:55]  Loaded 10 plugins.
+
+[17:03:55] 
+[17:03:55] Filterscripts
+[17:03:55] ---------------
+[17:03:55]   Loaded 0 filterscripts.
+
+[17:03:55] [sv:dbg:main:AmxLoad] : net game pointer (value:0x9006c30) received
+[17:03:55] [sv:dbg:network:bind] : voice server running on port 54131
+[17:03:55] Идёт подключение к базе данных: gs217154
+[17:03:55]   MySQL connection: TRUE (host)
+
+[17:03:55] -> Динамических объектов: 10892
+[17:03:55] -> Статических объектов: 0
+[17:03:55] -> Видимых объектов (стример): 1000
+[17:03:55]  Shuler RolePlay 
+[17:03:55]  
+[17:03:55] Number of vehicle models: 31
+[17:03:55] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[17:03:55] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[17:03:55] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[17:03:55] [Загружены склады мафий]: Потрачено: <0 ms>.
+[17:03:55] [Загружены склады банд]: Потрачено: <0 ms>.
+[17:03:55] [Загружено гангзон]: <100>. Потрачено: <1 ms>.
+[17:03:55] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[17:03:55] [Загружено остальное]: Потрачено: <0 ms>.
+[17:03:55] [Загружено семей]: <0>. Потрачено: <->
+[17:03:55] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[17:03:55] [Загружено подъездов]: <0>. Потрачено: <0 ms>.
+[17:03:55] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[17:03:55] [Version] Версия мода: Обновление v2
+[17:04:18] [connection] 141.101.215.81:41753 requests connection cookie.
+[17:04:19] [connection] incoming connection: 141.101.215.81:41753 id: 0
+[17:04:20] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:04:45] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:04:45] UPDATE `accounts` SET PosX=1918.646484,PosY=2076.826660,PosZ=15.848886, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:04:45] [part] Shuler_Dev has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[17:05:33] filterscripts = ""  (string)
+[17:05:33] 
+[17:05:33] Server Plugins
+[17:05:33] --------------
+[17:05:33]  Loading plugin: crashdetect.so
+[17:05:33]   CrashDetect plugin 4.19.4
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: CRP.so
+[17:05:33] 
+
+[17:05:33] ______________________________________
+
+[17:05:33]  Convert Rus To Pwn v0.1.1 loaded
+[17:05:33] ______________________________________
+
+[17:05:33]  By: Fro (c) Copyright <TBG> 2009-2011
+[17:05:33] ______________________________________
+
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: mysql_static.so
+[17:05:33]  >> plugin.mysql: R39-6 successfully loaded.
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: pawncmd.so
+[17:05:33] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: sscanf.so
+[17:05:33] 
+
+[17:05:33]  ===============================
+
+[17:05:33]       sscanf plugin loaded.     
+
+[17:05:33]          Version:  2.8.3        
+
+[17:05:33]   (c) 2018 Alex "Y_Less" Cole  
+
+[17:05:33]  ===============================
+
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: pawnregex.so
+[17:05:33] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: streamer.so
+[17:05:33] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: vehiclesIdFix.so
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: cef.so
+[17:05:33]   Loaded.
+[17:05:33]  Loading plugin: sampvoice.so
+[17:05:33] [sv:dbg:network:init] : module initializing...
+[17:05:33] [dbg:raknet:init] : module initializing...
+[17:05:33] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[17:05:33] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[17:05:33] [dbg:raknet:init] : module initialized
+[17:05:33] [sv:dbg:network:init] : module initialized
+[17:05:33]  -------------------------------------------    
+[17:05:33]    ___                __   __    _              
+[17:05:33]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[17:05:33]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[17:05:33]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[17:05:33]                   |_|                           
+[17:05:33]  -------------------------------------------    
+[17:05:33]            SampVoice by MOR loaded              
+[17:05:33]  -------------------------------------------    
+[17:05:33]   Loaded.
+[17:05:33]  Loaded 10 plugins.
+
+[17:05:33] 
+[17:05:33] Filterscripts
+[17:05:33] ---------------
+[17:05:33]   Loaded 0 filterscripts.
+
+[17:05:33] [sv:dbg:main:AmxLoad] : net game pointer (value:0x8567c30) received
+[17:05:33] [sv:dbg:network:bind] : voice server running on port 52487
+[17:05:33] Идёт подключение к базе данных: gs217154
+[17:05:33]   MySQL connection: TRUE (host)
+
+[17:05:33] -> Динамических объектов: 10892
+[17:05:33] -> Статических объектов: 0
+[17:05:33] -> Видимых объектов (стример): 1000
+[17:05:33]  Shuler RolePlay 
+[17:05:33]  
+[17:05:33] Number of vehicle models: 31
+[17:05:33] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[17:05:33] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[17:05:33] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[17:05:33] [Загружены склады мафий]: Потрачено: <0 ms>.
+[17:05:33] [Загружены склады банд]: Потрачено: <0 ms>.
+[17:05:33] [Загружено гангзон]: <100>. Потрачено: <0 ms>.
+[17:05:33] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[17:05:33] [Загружено остальное]: Потрачено: <0 ms>.
+[17:05:33] [Загружено семей]: <0>. Потрачено: <->
+[17:05:33] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[17:05:33] [Загружено подъездов]: <0>. Потрачено: <0 ms>.
+[17:05:33] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[17:05:33] [Version] Версия мода: Обновление v2
+[17:05:50] [connection] 141.101.215.81:41839 requests connection cookie.
+[17:05:51] [connection] incoming connection: 141.101.215.81:41839 id: 0
+[17:05:51] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:06:22] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:06:22] UPDATE `accounts` SET PosX=1921.674316,PosY=2077.087402,PosZ=15.829662, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:06:22] [part] Shuler_Dev has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[17:07:59] filterscripts = ""  (string)
+[17:07:59] 
+[17:07:59] Server Plugins
+[17:07:59] --------------
+[17:07:59]  Loading plugin: crashdetect.so
+[17:07:59]   CrashDetect plugin 4.19.4
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: CRP.so
+[17:07:59] 
+
+[17:07:59] ______________________________________
+
+[17:07:59]  Convert Rus To Pwn v0.1.1 loaded
+[17:07:59] ______________________________________
+
+[17:07:59]  By: Fro (c) Copyright <TBG> 2009-2011
+[17:07:59] ______________________________________
+
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: mysql_static.so
+[17:07:59]  >> plugin.mysql: R39-6 successfully loaded.
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: pawncmd.so
+[17:07:59] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: sscanf.so
+[17:07:59] 
+
+[17:07:59]  ===============================
+
+[17:07:59]       sscanf plugin loaded.     
+
+[17:07:59]          Version:  2.8.3        
+
+[17:07:59]   (c) 2018 Alex "Y_Less" Cole  
+
+[17:07:59]  ===============================
+
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: pawnregex.so
+[17:07:59] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: streamer.so
+[17:07:59] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: vehiclesIdFix.so
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: cef.so
+[17:07:59]   Loaded.
+[17:07:59]  Loading plugin: sampvoice.so
+[17:07:59] [sv:dbg:network:init] : module initializing...
+[17:07:59] [dbg:raknet:init] : module initializing...
+[17:07:59] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[17:07:59] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[17:07:59] [dbg:raknet:init] : module initialized
+[17:07:59] [sv:dbg:network:init] : module initialized
+[17:07:59]  -------------------------------------------    
+[17:07:59]    ___                __   __    _              
+[17:07:59]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[17:07:59]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[17:07:59]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[17:07:59]                   |_|                           
+[17:07:59]  -------------------------------------------    
+[17:07:59]            SampVoice by MOR loaded              
+[17:07:59]  -------------------------------------------    
+[17:07:59]   Loaded.
+[17:07:59]  Loaded 10 plugins.
+
+[17:07:59] 
+[17:07:59] Filterscripts
+[17:07:59] ---------------
+[17:07:59]   Loaded 0 filterscripts.
+
+[17:07:59] [sv:dbg:main:AmxLoad] : net game pointer (value:0x9926c30) received
+[17:07:59] [sv:dbg:network:bind] : voice server running on port 35852
+[17:07:59] Идёт подключение к базе данных: gs217154
+[17:07:59]   MySQL connection: TRUE (host)
+
+[17:07:59] -> Динамических объектов: 10892
+[17:07:59] -> Статических объектов: 0
+[17:07:59] -> Видимых объектов (стример): 1000
+[17:07:59]  Shuler RolePlay 
+[17:07:59]  
+[17:07:59] Number of vehicle models: 31
+[17:07:59] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[17:07:59] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[17:07:59] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[17:07:59] [Загружены склады мафий]: Потрачено: <0 ms>.
+[17:07:59] [Загружены склады банд]: Потрачено: <0 ms>.
+[17:07:59] [Загружено гангзон]: <100>. Потрачено: <1 ms>.
+[17:07:59] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[17:07:59] [Загружено остальное]: Потрачено: <0 ms>.
+[17:07:59] [Загружено семей]: <0>. Потрачено: <->
+[17:07:59] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[17:07:59] [Загружено подъездов]: <0>. Потрачено: <0 ms>.
+[17:07:59] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[17:07:59] [Version] Версия мода: Обновление v2
+[17:08:17] [connection] 141.101.215.81:42006 requests connection cookie.
+[17:08:18] [connection] incoming connection: 141.101.215.81:42006 id: 0
+[17:08:18] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:49:28] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:49:28] UPDATE `accounts` SET PosX=1923.390380,PosY=2078.071289,PosZ=15.818766, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:49:28] [part] Shuler_Dev has left the server (0:1)
+[17:50:28] [connection] 141.101.215.81:45358 requests connection cookie.
+[17:50:29] [connection] incoming connection: 141.101.215.81:45358 id: 0
+[17:50:29] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:51:16] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:51:16] UPDATE `accounts` SET PosX=1926.318359,PosY=2078.514160,PosZ=15.804687, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:51:16] [part] Shuler_Dev has left the server (0:1)
+[17:52:19] [connection] 141.101.215.81:45611 requests connection cookie.
+[17:52:20] [connection] incoming connection: 141.101.215.81:45611 id: 0
+[17:52:20] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:55:37] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:55:37] UPDATE `accounts` SET PosX=1917.680297,PosY=2077.898925,PosZ=15.852144, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:55:37] [part] Shuler_Dev has left the server (0:1)
+[17:55:58] [connection] 141.101.215.81:46267 requests connection cookie.
+[17:55:59] [connection] incoming connection: 141.101.215.81:46267 id: 0
+[17:55:59] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:56:14] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:56:14] [part] Shuler_Dev has left the server (0:1)
+[17:58:07] [connection] 141.101.215.81:46457 requests connection cookie.
+[17:58:08] [connection] incoming connection: 141.101.215.81:46457 id: 0
+[17:58:08] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[17:58:41] [sv:dbg:network:connect] : disconnecting player (0) ...
+[17:58:41] UPDATE `accounts` SET PosX=1917.474731,PosY=2078.212158,PosZ=15.853576, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[17:58:41] [part] Shuler_Dev has left the server (0:1)
+[18:04:06] [connection] 141.101.215.81:46815 requests connection cookie.
+[18:04:07] [connection] incoming connection: 141.101.215.81:46815 id: 0
+[18:04:08] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[18:05:05] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:05:05] UPDATE `accounts` SET PosX=1921.586791,PosY=2075.654541,PosZ=15.830218, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[18:05:05] [part] Shuler_Dev has left the server (0:1)
+[18:05:46] [connection] 141.101.215.81:46865 requests connection cookie.
+[18:05:46] [connection] incoming connection: 141.101.215.81:46865 id: 0
+[18:05:47] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[18:06:30] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:06:30] UPDATE `accounts` SET PosX=2225.205322,PosY=1980.193847,PosZ=12.254472, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[18:06:30] [part] Shuler_Dev has left the server (0:1)
+[18:07:47] [connection] 141.101.215.81:47000 requests connection cookie.
+[18:07:48] [connection] incoming connection: 141.101.215.81:47000 id: 0
+[18:07:51] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[18:08:43] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:08:43] UPDATE `accounts` SET PosX=1915.113525,PosY=2077.324218,PosZ=15.868927, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[18:08:43] [part] Shuler_Dev has left the server (0:0)
+[18:19:06] [connection] 141.101.215.81:48868 requests connection cookie.
+[18:19:07] [connection] incoming connection: 141.101.215.81:48868 id: 0
+[18:19:07] [join] Shuler_Dev has joined the server (0:141.101.215.81)
+[18:21:11] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:21:11] UPDATE `accounts` SET PosX=1922.841186,PosY=2076.921386,PosZ=15.822254, pInt = 0, pWorld = 0 WHERE name = 'Shuler_Dev'
+[18:21:11] [part] Shuler_Dev has left the server (0:0)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[21:06:25] filterscripts = ""  (string)
+[21:06:25] 
+[21:06:25] Server Plugins
+[21:06:25] --------------
+[21:06:25]  Loading plugin: crashdetect.so
+[21:06:25]   CrashDetect plugin 4.19.4
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: CRP.so
+[21:06:25] 
+
+[21:06:25] ______________________________________
+
+[21:06:25]  Convert Rus To Pwn v0.1.1 loaded
+[21:06:25] ______________________________________
+
+[21:06:25]  By: Fro (c) Copyright <TBG> 2009-2011
+[21:06:25] ______________________________________
+
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: mysql_static.so
+[21:06:25]  >> plugin.mysql: R39-6 successfully loaded.
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: pawncmd.so
+[21:06:25] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: sscanf.so
+[21:06:25] 
+
+[21:06:25]  ===============================
+
+[21:06:25]       sscanf plugin loaded.     
+
+[21:06:25]          Version:  2.8.3        
+
+[21:06:25]   (c) 2018 Alex "Y_Less" Cole  
+
+[21:06:25]  ===============================
+
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: pawnregex.so
+[21:06:25] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: streamer.so
+[21:06:25] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: vehiclesIdFix.so
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: cef.so
+[21:06:25]   Loaded.
+[21:06:25]  Loading plugin: sampvoice.so
+[21:06:25] [sv:dbg:network:init] : module initializing...
+[21:06:25] [dbg:raknet:init] : module initializing...
+[21:06:25] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[21:06:25] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[21:06:25] [dbg:raknet:init] : module initialized
+[21:06:25] [sv:dbg:network:init] : module initialized
+[21:06:25]  -------------------------------------------    
+[21:06:25]    ___                __   __    _              
+[21:06:25]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[21:06:25]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[21:06:25]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[21:06:25]                   |_|                           
+[21:06:25]  -------------------------------------------    
+[21:06:25]            SampVoice by MOR loaded              
+[21:06:25]  -------------------------------------------    
+[21:06:25]   Loaded.
+[21:06:25]  Loaded 10 plugins.
+
+[21:06:25] 
+[21:06:25] Filterscripts
+[21:06:25] ---------------
+[21:06:25]   Loaded 0 filterscripts.
+
+[21:06:25] [sv:dbg:main:AmxLoad] : net game pointer (value:0x95f4c40) received
+[21:06:25] [sv:dbg:network:bind] : voice server running on port 37258
+[21:06:25] Идёт подключение к базе данных: gs217154
+[21:06:25]   MySQL connection: TRUE (host)
+
+[21:06:25] -> Динамических объектов: 10892
+[21:06:25] -> Статических объектов: 0
+[21:06:25] -> Видимых объектов (стример): 1000
+[21:06:25]  Shuler RolePlay 
+[21:06:25]  
+[21:06:25] Number of vehicle models: 31
+[21:06:25] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[21:06:25] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[21:06:25] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[21:06:25] [Загружены склады мафий]: Потрачено: <1 ms>.
+[21:06:25] [Загружены склады банд]: Потрачено: <0 ms>.
+[21:06:25] [Загружено гангзон]: <100>. Потрачено: <0 ms>.
+[21:06:25] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[21:06:25] [Загружено остальное]: Потрачено: <0 ms>.
+[21:06:25] [Загружено семей]: <0>. Потрачено: <->
+[21:06:25] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[21:06:25] [Загружено подъездов]: <0>. Потрачено: <1 ms>.
+[21:06:25] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[21:06:25] [Version] Версия мода: Обновление v2
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[20:32:19] filterscripts = ""  (string)
+[20:32:19] 
+[20:32:19] Server Plugins
+[20:32:19] --------------
+[20:32:19]  Loading plugin: crashdetect.so
+[20:32:19]   CrashDetect plugin 4.19.4
+[20:32:19]   Loaded.
+[20:32:19]  Loading plugin: CRP.so
+[20:32:19] 
+
+[20:32:19] ______________________________________
+
+[20:32:19]  Convert Rus To Pwn v0.1.1 loaded
+[20:32:19] ______________________________________
+
+[20:32:19]  By: Fro (c) Copyright <TBG> 2009-2011
+[20:32:19] ______________________________________
+
+[20:32:19]   Loaded.
+[20:32:19]  Loading plugin: mysql_static.so
+[20:32:19]  >> plugin.mysql: R39-6 successfully loaded.
+[20:32:19]   Loaded.
+[20:32:19]  Loading plugin: pawncmd.so
+[20:32:20] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: sscanf.so
+[20:32:20] 
+
+[20:32:20]  ===============================
+
+[20:32:20]       sscanf plugin loaded.     
+
+[20:32:20]          Version:  2.8.3        
+
+[20:32:20]   (c) 2018 Alex "Y_Less" Cole  
+
+[20:32:20]  ===============================
+
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: pawnregex.so
+[20:32:20] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: streamer.so
+[20:32:20] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: vehiclesIdFix.so
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: cef.so
+[20:32:20]   Loaded.
+[20:32:20]  Loading plugin: sampvoice.so
+[20:32:20] [sv:dbg:network:init] : module initializing...
+[20:32:20] [dbg:raknet:init] : module initializing...
+[20:32:20] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[20:32:20] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[20:32:20] [dbg:raknet:init] : module initialized
+[20:32:20] [sv:dbg:network:init] : module initialized
+[20:32:20]  -------------------------------------------    
+[20:32:20]    ___                __   __    _              
+[20:32:20]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[20:32:20]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[20:32:20]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[20:32:20]                   |_|                           
+[20:32:20]  -------------------------------------------    
+[20:32:20]            SampVoice by MOR loaded              
+[20:32:20]  -------------------------------------------    
+[20:32:20]   Loaded.
+[20:32:20]  Loaded 10 plugins.
+
+[20:32:20] 
+[20:32:20] Filterscripts
+[20:32:20] ---------------
+[20:32:20]   Loaded 0 filterscripts.
+
+[20:32:20] [sv:dbg:main:AmxLoad] : net game pointer (value:0x8399c30) received
+[20:32:20] [sv:dbg:network:bind] : voice server running on port 45517
+[20:32:20] Идёт подключение к базе данных: gs217154
+[20:32:20]   MySQL connection: TRUE (host)
+
+[20:32:20] -> Динамических объектов: 10892
+[20:32:20] -> Статических объектов: 0
+[20:32:20] -> Видимых объектов (стример): 1000
+[20:32:20]  Shuler RolePlay 
+[20:32:20]  
+[20:32:20] Number of vehicle models: 31
+[20:32:20] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[20:32:20] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[20:32:20] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[20:32:20] [Загружены склады мафий]: Потрачено: <0 ms>.
+[20:32:20] [Загружены склады банд]: Потрачено: <1 ms>.
+[20:32:20] [Загружено гангзон]: <100>. Потрачено: <1 ms>.
+[20:32:20] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[20:32:20] [Загружено остальное]: Потрачено: <0 ms>.
+[20:32:20] [Загружено семей]: <0>. Потрачено: <->
+[20:32:20] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[20:32:20] [Загружено подъездов]: <0>. Потрачено: <0 ms>.
+[20:32:20] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[20:32:20] [Version] Версия мода: Обновление v2
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R2, (C)2005-2015 SA-MP Team
+
+[21:30:11] filterscripts = ""  (string)
+[21:30:11] 
+[21:30:11] Server Plugins
+[21:30:11] --------------
+[21:30:11]  Loading plugin: crashdetect.so
+[21:30:11]   CrashDetect plugin 4.19.4
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: CRP.so
+[21:30:11] 
+
+[21:30:11] ______________________________________
+
+[21:30:11]  Convert Rus To Pwn v0.1.1 loaded
+[21:30:11] ______________________________________
+
+[21:30:11]  By: Fro (c) Copyright <TBG> 2009-2011
+[21:30:11] ______________________________________
+
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: mysql_static.so
+[21:30:11]  >> plugin.mysql: R39-6 successfully loaded.
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: pawncmd.so
+[21:30:11] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: sscanf.so
+[21:30:11] 
+
+[21:30:11]  ===============================
+
+[21:30:11]       sscanf plugin loaded.     
+
+[21:30:11]          Version:  2.8.3        
+
+[21:30:11]   (c) 2018 Alex "Y_Less" Cole  
+
+[21:30:11]  ===============================
+
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: pawnregex.so
+[21:30:11] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: streamer.so
+[21:30:11] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: vehiclesIdFix.so
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: cef.so
+[21:30:11]   Loaded.
+[21:30:11]  Loading plugin: sampvoice.so
+[21:30:11] [sv:dbg:network:init] : module initializing...
+[21:30:11] [dbg:raknet:init] : module initializing...
+[21:30:11] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[21:30:11] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[21:30:11] [dbg:raknet:init] : module initialized
+[21:30:11] [sv:dbg:network:init] : module initialized
+[21:30:11]  -------------------------------------------    
+[21:30:11]    ___                __   __    _              
+[21:30:11]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[21:30:11]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[21:30:11]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[21:30:11]                   |_|                           
+[21:30:11]  -------------------------------------------    
+[21:30:11]            SampVoice by MOR loaded              
+[21:30:11]  -------------------------------------------    
+[21:30:11]   Loaded.
+[21:30:11]  Loaded 10 plugins.
+
+[21:30:11] 
+[21:30:11] Filterscripts
+[21:30:11] ---------------
+[21:30:11]   Loaded 0 filterscripts.
+
+[21:30:12] [sv:dbg:main:AmxLoad] : net game pointer (value:0x9bcbc30) received
+[21:30:12] [sv:dbg:network:bind] : voice server running on port 39507
+[21:30:12] Идёт подключение к базе данных: gs217154
+[21:30:12]   MySQL connection: TRUE (host)
+
+[21:30:12] -> Динамических объектов: 10892
+[21:30:12] -> Статических объектов: 0
+[21:30:12] -> Видимых объектов (стример): 1000
+[21:30:12]  Shuler RolePlay 
+[21:30:12]  
+[21:30:12] Number of vehicle models: 31
+[21:30:12] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[21:30:12] [Загружено бизнесов]: <0>. Потрачено: <0 ms>.
+[21:30:12] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[21:30:12] [Загружены склады мафий]: Потрачено: <0 ms>.
+[21:30:12] [Загружены склады банд]: Потрачено: <0 ms>.
+[21:30:12] [Загружено гангзон]: <100>. Потрачено: <1 ms>.
+[21:30:12] [Загружено банкоматов]: <0>. Потрачено: <0 ms>.
+[21:30:12] [Загружено остальное]: Потрачено: <0 ms>.
+[21:30:12] [Загружено семей]: <0>. Потрачено: <->
+[21:30:12] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[21:30:12] [Загружено подъездов]: <0>. Потрачено: <0 ms>.
+[21:30:12] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[21:30:12] [Version] Версия мода: Обновление v2
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R3, (C)2005-2019 SA-MP Team
+
+[18:32:46] filterscripts = ""  (string)
+[18:32:46] 
+[18:32:46] Server Plugins
+[18:32:46] --------------
+[18:32:46]  Loading plugin: crashdetect.so
+[18:32:46]   CrashDetect plugin 4.19.4
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: CRP.so
+[18:32:46] 
+
+[18:32:46] ______________________________________
+
+[18:32:46]  Convert Rus To Pwn v0.1.1 loaded
+[18:32:46] ______________________________________
+
+[18:32:46]  By: Fro (c) Copyright <TBG> 2009-2011
+[18:32:46] ______________________________________
+
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: mysql_static.so
+[18:32:46]  >> plugin.mysql: R39-6 successfully loaded.
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: pawncmd.so
+[18:32:46] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: sscanf.so
+[18:32:46] 
+
+[18:32:46]  ===============================
+
+[18:32:46]       sscanf plugin loaded.     
+
+[18:32:46]          Version:  2.8.3        
+
+[18:32:46]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:32:46]  ===============================
+
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: pawnregex.so
+[18:32:46] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: streamer.so
+[18:32:46] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: vehiclesIdFix.so
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: cef.so
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: sampvoice.so
+[18:32:46] [sv:dbg:network:init] : module initializing...
+[18:32:46] [dbg:raknet:init] : module initializing...
+[18:32:46] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[18:32:46] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[18:32:46] [dbg:raknet:init] : module initialized
+[18:32:46] [sv:dbg:network:init] : module initialized
+[18:32:46]  -------------------------------------------    
+[18:32:46]    ___                __   __    _              
+[18:32:46]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[18:32:46]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[18:32:46]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[18:32:46]                   |_|                           
+[18:32:46]  -------------------------------------------    
+[18:32:46]            SampVoice by MOR loaded              
+[18:32:46]  -------------------------------------------    
+[18:32:46]   Loaded.
+[18:32:46]  Loading plugin: pawnraknet.so
+[18:32:46]   Plugin does not conform to architecture.
+[18:32:46]   Failed.
+[18:32:46]  Loaded 10 plugins.
+
+[18:32:46] 
+[18:32:46] Filterscripts
+[18:32:46] ---------------
+[18:32:46]   Loading filterscript 'flymode.amx'...
+[18:32:46] [sv:dbg:main:AmxLoad] : net game pointer (value:0x9a41fe0) received
+[18:32:46] [sv:dbg:network:bind] : voice server running on port 41986
+[18:32:46]   Loaded 1 filterscripts.
+
+[18:32:46] [sv:dbg:main:AmxLoad] : failed to bind voice server
+[18:32:46] [debug] Run time error 19: "File or function is not found"
+[18:32:46] [debug]  PR_Init
+[18:32:46] [debug]  BS_New
+[18:32:46] [debug]  BS_WriteValue
+[18:32:46] [debug]  PR_SendPacket
+[18:32:46] [debug]  BS_Delete
+[18:32:46] [debug]  BS_SetReadOffset
+[18:32:46] [debug]  BS_ReadValue
+[18:32:46] [debug]  BS_SetWriteOffset
+[18:32:46] [debug] Run time error 19: "File or function is not found"
+[18:32:46] [debug]  PR_Init
+[18:32:46] [debug]  BS_New
+[18:32:46] [debug]  BS_WriteValue
+[18:32:46] [debug]  PR_SendPacket
+[18:32:46] [debug]  BS_Delete
+[18:32:46] [debug]  BS_SetReadOffset
+[18:32:46] [debug]  BS_ReadValue
+[18:32:46] [debug]  BS_SetWriteOffset
+[18:32:46] Script[gamemodes/amazingcopy.amx]: Run time error 19: "File or function is not found"
+[18:32:46] Number of vehicle models: 0
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R3, (C)2005-2019 SA-MP Team
+
+[18:37:22] filterscripts = ""  (string)
+[18:37:22] 
+[18:37:22] Server Plugins
+[18:37:22] --------------
+[18:37:22]  Loading plugin: crashdetect.so
+[18:37:22]   CrashDetect plugin 4.19.4
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: CRP.so
+[18:37:22] 
+
+[18:37:22] ______________________________________
+
+[18:37:22]  Convert Rus To Pwn v0.1.1 loaded
+[18:37:22] ______________________________________
+
+[18:37:22]  By: Fro (c) Copyright <TBG> 2009-2011
+[18:37:22] ______________________________________
+
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: mysql_static.so
+[18:37:22]  >> plugin.mysql: R39-6 successfully loaded.
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: pawncmd.so
+[18:37:22] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: sscanf.so
+[18:37:22] 
+
+[18:37:22]  ===============================
+
+[18:37:22]       sscanf plugin loaded.     
+
+[18:37:22]          Version:  2.8.3        
+
+[18:37:22]   (c) 2018 Alex "Y_Less" Cole  
+
+[18:37:22]  ===============================
+
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: pawnregex.so
+[18:37:22] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: streamer.so
+[18:37:22] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: vehiclesIdFix.so
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: cef.so
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: sampvoice.so
+[18:37:22] [sv:dbg:network:init] : module initializing...
+[18:37:22] [dbg:raknet:init] : module initializing...
+[18:37:22] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[18:37:22] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[18:37:22] [dbg:raknet:init] : module initialized
+[18:37:22] [sv:dbg:network:init] : module initialized
+[18:37:22]  -------------------------------------------    
+[18:37:22]    ___                __   __    _              
+[18:37:22]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[18:37:22]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[18:37:22]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[18:37:22]                   |_|                           
+[18:37:22]  -------------------------------------------    
+[18:37:22]            SampVoice by MOR loaded              
+[18:37:22]  -------------------------------------------    
+[18:37:22]   Loaded.
+[18:37:22]  Loading plugin: pawnraknet.so
+[18:37:22] [Pawn.RakNet] plugin v1.6.0 loading...
+[18:37:22] [Pawn.RakNet] 
+
+    | Pawn.RakNet 1.6.0 | 2016 - 2023
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Feb 12 2023 at 19:35:06
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.RakNet
+    |--------------------------------------------------------------
+    | Wiki: https://github.com/katursis/Pawn.RakNet/wiki
+
+[18:37:22]   Loaded.
+[18:37:22]  Loaded 11 plugins.
+
+[18:37:22] 
+[18:37:22] Filterscripts
+[18:37:22] ---------------
+[18:37:22]   Loading filterscript 'flymode.amx'...
+[18:37:22] [sv:dbg:main:AmxLoad] : net game pointer (value:0x9036ff0) received
+[18:37:22] [sv:dbg:network:bind] : voice server running on port 40372
+[18:37:22]   Loaded 1 filterscripts.
+
+[18:37:22] [sv:dbg:main:AmxLoad] : failed to bind voice server
+[18:37:22] Идёт подключение к базе данных: gs325433
+[18:37:22] -> Динамических объектов: 6386
+[18:37:22] -> Статических объектов: 0
+[18:37:22] -> Видимых объектов (стример): 1000
+[18:37:22]  Space RolePlay 
+[18:37:22]  
+[18:37:22] Mod Loaded
+[18:37:22] Number of vehicle models: 24
+[18:37:22] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[18:37:22] [Загружено бизнесов]: <3>. Потрачено: <1 ms>.
+[18:37:22] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[18:37:22] [Загружены склады мафий]: Потрачено: <0 ms>.
+[18:37:22] [Загружены склады банд]: Потрачено: <0 ms>.
+[18:37:22] [Загружено гангзон]: <100>. Потрачено: <0 ms>.
+[18:37:22] [Загружено банкоматов]: <1>. Потрачено: <0 ms>.
+[18:37:22] [Загружено остальное]: Потрачено: <0 ms>.
+[18:37:22] [Загружено семей]: <0>. Потрачено: <->
+[18:37:22] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[18:37:22] [Загружено подъездов]: <1>. Потрачено: <0 ms>.
+[18:37:22] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[18:37:22] [Version] Версия мода: Обновление v0.4
+[18:45:39] [connection] incoming connection: 89.110.85.70:53033 id: 0
+[18:45:43] [join] SPACE_ONLINE has joined the server (0:89.110.85.70)
+[18:46:19] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:46:19] [part] SPACE_ONLINE has left the server (0:1)
+[18:47:05] [connection] incoming connection: 89.110.85.70:64144 id: 0
+[18:47:06] [join] SPACE_ONLINE has joined the server (0:89.110.85.70)
+[18:47:24] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:47:24] [part] SPACE_ONLINE has left the server (0:0)
+[18:55:17] [connection] incoming connection: 77.40.62.194:3768 id: 0
+[18:55:18] [join] Danil_Firsov has joined the server (0:77.40.62.194)
+[18:55:26] [sv:dbg:network:connect] : disconnecting player (0) ...
+[18:55:26] [part] Danil_Firsov has left the server (0:1)
+[20:28:54] [connection] incoming connection: 213.176.17.66:20078 id: 0
+[20:28:55] [join] SPACE_ONLINE has joined the server (0:213.176.17.66)
+[20:29:07] [sv:dbg:network:connect] : disconnecting player (0) ...
+[20:29:07] [part] SPACE_ONLINE has left the server (0:1)
+[20:30:23] [connection] incoming connection: 213.176.17.66:36071 id: 0
+[20:30:24] [join] SPACE_ONLINE has joined the server (0:213.176.17.66)
+[20:30:33] [sv:dbg:network:connect] : disconnecting player (0) ...
+[20:30:33] [part] SPACE_ONLINE has left the server (0:1)
+[20:35:17] [connection] incoming connection: 213.176.17.66:38921 id: 0
+[20:35:18] [join] SPACE_ONLINE has joined the server (0:213.176.17.66)
+[20:35:28] [sv:dbg:network:connect] : disconnecting player (0) ...
+[20:35:28] [part] SPACE_ONLINE has left the server (0:1)
+
+----------
+Loaded log file: "server_log.txt".
+----------
+
+SA-MP Dedicated Server
+----------------------
+v0.3.7-R3, (C)2005-2019 SA-MP Team
+
+[20:43:28] filterscripts = ""  (string)
+[20:43:28] 
+[20:43:28] Server Plugins
+[20:43:28] --------------
+[20:43:28]  Loading plugin: crashdetect.so
+[20:43:28]   CrashDetect plugin 4.19.4
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: CRP.so
+[20:43:28] 
+
+[20:43:28] ______________________________________
+
+[20:43:28]  Convert Rus To Pwn v0.1.1 loaded
+[20:43:28] ______________________________________
+
+[20:43:28]  By: Fro (c) Copyright <TBG> 2009-2011
+[20:43:28] ______________________________________
+
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: mysql_static.so
+[20:43:28]  >> plugin.mysql: R39-6 successfully loaded.
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: pawncmd.so
+[20:43:28] Pawn.CMD plugin v3.2.0 by urShadow has been loaded
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: sscanf.so
+[20:43:28] 
+
+[20:43:28]  ===============================
+
+[20:43:28]       sscanf plugin loaded.     
+
+[20:43:28]          Version:  2.8.3        
+
+[20:43:28]   (c) 2018 Alex "Y_Less" Cole  
+
+[20:43:28]  ===============================
+
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: pawnregex.so
+[20:43:28] Pawn.Regex plugin v1.1.2 by urShadow loaded
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: streamer.so
+[20:43:28] 
+
+*** Streamer Plugin v2.9.4 by Incognito loaded ***
+
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: vehiclesIdFix.so
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: cef.so
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: sampvoice.so
+[20:43:28] [sv:dbg:network:init] : module initializing...
+[20:43:28] [dbg:raknet:init] : module initializing...
+[20:43:28] [dbg:raknet:init] : installed hook to 'GetRakServerInterface' function (ptr:0x806ca30)
+[20:43:28] [dbg:raknet:init] : installed hook to 'OnPlayerDisconnect' function (ptr:0x80a51d0)
+[20:43:28] [dbg:raknet:init] : module initialized
+[20:43:28] [sv:dbg:network:init] : module initialized
+[20:43:28]  -------------------------------------------    
+[20:43:28]    ___                __   __    _              
+[20:43:28]   / __| __ _ _ __  _ _\ \ / /__ (_) __ ___    
+[20:43:28]   \__ \/ _` | '  \| '_ \   / _ \| |/ _/ -_)
+[20:43:28]   |___/\__,_|_|_|_| .__/\_/\___/|_|\__\___|
+[20:43:28]                   |_|                           
+[20:43:28]  -------------------------------------------    
+[20:43:28]            SampVoice by MOR loaded              
+[20:43:28]  -------------------------------------------    
+[20:43:28]   Loaded.
+[20:43:28]  Loading plugin: pawnraknet.so
+[20:43:28] [Pawn.RakNet] plugin v1.6.0 loading...
+[20:43:28] [Pawn.RakNet] 
+
+    | Pawn.RakNet 1.6.0 | 2016 - 2023
+    |--------------------------------
+    | Author and maintainer: katursis
+
+
+    | Compiled: Feb 12 2023 at 19:35:06
+    |--------------------------------------------------------------
+    | Repository: https://github.com/katursis/Pawn.RakNet
+    |--------------------------------------------------------------
+    | Wiki: https://github.com/katursis/Pawn.RakNet/wiki
+
+[20:43:28]   Loaded.
+[20:43:28]  Loaded 11 plugins.
+
+[20:43:28] 
+[20:43:28] Filterscripts
+[20:43:28] ---------------
+[20:43:28]   Loading filterscript 'flymode.amx'...
+[20:43:28] [sv:dbg:main:AmxLoad] : net game pointer (value:0x83e3fe0) received
+[20:43:28] [sv:dbg:network:bind] : voice server running on port 44487
+[20:43:28]   Loaded 1 filterscripts.
+
+[20:43:28] [sv:dbg:main:AmxLoad] : failed to bind voice server
+[20:43:28] Идёт подключение к базе данных: gs325433
+[20:43:28] -> Динамических объектов: 15
+[20:43:28] -> Статических объектов: 0
+[20:43:28] -> Видимых объектов (стример): 1000
+[20:43:28]  Space RolePlay 
+[20:43:28]  
+[20:43:28] Mod Loaded
+[20:43:28] Number of vehicle models: 24
+[20:43:28] [Загружено орг/раб. автомобилей]: <0>. Потрачено: <0 ms>.
+[20:43:28] [Загружено бизнесов]: <3>. Потрачено: <0 ms>.
+[20:43:28] [Загружено домов]: <0>. Потрачено: <0 ms>.
+[20:43:28] [Загружены склады мафий]: Потрачено: <0 ms>.
+[20:43:28] [Загружены склады банд]: Потрачено: <0 ms>.
+[20:43:28] [Загружено гангзон]: <100>. Потрачено: <1 ms>.
+[20:43:28] [Загружено банкоматов]: <1>. Потрачено: <0 ms>.
+[20:43:28] [Загружено остальное]: Потрачено: <0 ms>.
+[20:43:28] [Загружено семей]: <0>. Потрачено: <->
+[20:43:28] [Загружено радаров]: <0>. Потрачено: <0 ms>.
+[20:43:28] [Загружено подъездов]: <1>. Потрачено: <0 ms>.
+[20:43:28] [MySQL] Мод успешно загружен, теперь можно заходить на сервер
+[20:43:28] [Version] Версия мода: Обновление v0.4

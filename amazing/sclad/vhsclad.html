@@ -1,0 +1,376 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Склад ВЧ</title>
+  <style>
+    @font-face {
+      font-family: 'Proxima Nova Bold';
+      src: url('css/fonts/ProximaNova-Bold.ttf') format('truetype');
+      font-weight: bold;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: "Gotham-Medium";
+      src: url("css/fonts/Gotham Pro Medium.ttf");
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: transparent;
+      font-family: 'Proxima Nova Bold', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    /* Главный контейнер склада */
+    .warehouse-dialog {
+      width: 820px;
+      background: linear-gradient(to bottom right, #1a1a1c, #201f24);
+      border: 1px solid #444;
+      border-radius: 5px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      color: #fff;
+      padding: 25px;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    /* Подключение фонового рисунка */
+    .warehouse-dialog::before {
+      content: "";
+      position: absolute;
+      top: 0; 
+      left: 0; 
+      right: 0; 
+      bottom: 0;
+      background: 
+        linear-gradient(to bottom, rgba(26, 26, 28, 0.6) 0%, rgba(32, 31, 36, 0.2) 100%),
+        url('background.2443a2ce8df7a04d.png') no-repeat center center;
+      background-size: cover;
+      z-index: -1;
+      opacity: 1.50;
+    }
+
+    /* Кнопка закрытия в верхнем углу */
+    .close-btn {
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    .close-badge {
+      background-color: #fff;
+      color: #000;
+      font-family: "Gotham-Medium", sans-serif;
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .close-text {
+      font-size: 12px;
+      color: #a4a4a6;
+      text-transform: uppercase;
+      font-family: "Gotham-Medium", sans-serif;
+    }
+
+    /* Заголовок окна */
+    .warehouse-title {
+      font-family: "Gotham-Medium", sans-serif;
+      font-weight: bold;
+      font-size: 20px;
+      color: #e69348;
+      text-transform: uppercase;
+      letter-spacing: 0.155vh;
+      margin-bottom: 25px;
+      margin-top: 10px;
+    }
+
+    /* Контейнер с прокруткой вниз */
+    .warehouse-content {
+      max-height: 440px;
+      overflow-y: auto;
+      scrollbar-width: none;
+      padding-right: 5px;
+    }
+
+    /* Стилизация ползунка для Chrome/Safari/CEF */
+    .warehouse-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .warehouse-content::-webkit-scrollbar-thumb {
+      background-color: #e69348;
+      border-radius: 3px;
+    }
+
+    .warehouse-content::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Сетка предметов — строго 4 в ряд */
+    .items-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+    }
+
+    /* Карточка отдельного предмета */
+    .item-card {
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 2px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    .item-name {
+      font-family: 'Proxima Nova Bold', sans-serif;
+      font-size: 14px; /* Размер как у элементов списков */
+      color: #ffffff;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 15px;
+      letter-spacing: 0.5px;
+    }
+
+    .item-preview {
+      width: 100px;
+      height: 75px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .item-preview img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    /* Блок стоимости / ресурсов */
+    .item-requirements {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .req-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px; /* Настройки размера текста из диалогов */
+      font-family: 'Proxima Nova Bold', sans-serif;
+      color: #ffffff;
+    }
+
+    .req-icon {
+      width: 16px;
+      height: 16px;
+      object-fit: contain;
+    }
+
+    /* Кнопка "Взять" с оригинальным градиентом */
+    .btn-take {
+      width: 100%;
+      padding: 12px 15px;
+      border: none;
+      border-radius: 1.5px;
+      background: linear-gradient(to right, #d98236, #f3a659);
+      color: white;
+      font-family: 'Proxima Nova Bold', sans-serif;
+      font-size: 12px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: box-shadow 0.5s ease, opacity 0.2s;
+      box-shadow: 0 1.5px 0 #945319;
+      opacity: 0.9;
+    }
+
+    .btn-take:hover {
+      opacity: 1;
+      box-shadow: 
+        0 1.5px 0 #945319,
+        0 3px 2px rgba(230, 147, 72, 0.3);
+    }
+
+    .btn-take:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="warehouse-dialog">
+    <div class="close-btn" onclick="closeWarehouse()">
+      <span class="close-badge">Esc</span>
+      <span class="close-text">Закрыть</span>
+    </div>
+
+    <div class="warehouse-title">Склад ВЧ</div>
+
+    <div class="warehouse-content">
+      <div class="items-grid">
+        
+        <div class="item-card">
+          <div class="item-name">СВД ПСО</div>
+          <div class="item-preview"><img src="34.png" alt="СВД ПСО"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 90</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 45</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('svd')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">АКС-74У</div>
+          <div class="item-preview"><img src="29.png" alt="АКС-74У"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 50</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 150</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('aks74u')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Сайга</div>
+          <div class="item-preview"><img src="27.png" alt="Сайга"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 40</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 60</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('saiga')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Бронежилет</div>
+          <div class="item-preview"><img src="bronik.png" alt="Бронежилет"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 15</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('armor')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">АС «ВАЛ»</div>
+          <div class="item-preview"><img src="31.png" alt="АС ВАЛ"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 100</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 80</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('as_val')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Пистолет ТТ</div>
+          <div class="item-preview"><img src="24.png" alt="Пистолет ТТ"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 40</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 35</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('tt_pistol')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">ПП Бизон</div>
+          <div class="item-preview"><img src="83.png" alt="ПП Бизон"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 60</div>
+            <div class="req-box"><img src="ammo.png" class="req-icon"> 64</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('bizon')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Дубинка</div>
+          <div class="item-preview"><img src="10.png" alt="Дубинка"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 12</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('baton')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Граната</div>
+          <div class="item-preview"><img src="16.png" alt="Граната"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 30</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('grenade')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Парашют</div>
+          <div class="item-preview"><img src="46.png" alt="Парашют"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 10</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('parachute')">Взять</button>
+        </div>
+
+        <div class="item-card">
+          <div class="item-name">Аптечка</div>
+          <div class="item-preview"><img src="heal.png" alt="Аптечка"></div>
+          <div class="item-requirements">
+            <div class="req-box"><img src="scrap.png" class="req-icon"> 15</div>
+          </div>
+          <button class="btn-take" onclick="takeItem('medkit')">Взять</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function takeItem(itemId) {
+      if (typeof mp !== 'undefined') {
+        mp.trigger("OnArmyWarehouseTake", itemId);
+      } else if (typeof cef !== 'undefined') {
+        cef.emit("OnArmyWarehouseTake", itemId);
+      } else {
+        console.log(`[CEF] Взять предмет (ВЧ): ${itemId}`);
+      }
+    }
+
+    function closeWarehouse() {
+      if (typeof mp !== 'undefined') {
+        mp.trigger("CloseArmyWarehouse");
+      } else if (typeof cef !== 'undefined') {
+        cef.emit("CloseArmyWarehouse");
+      } else {
+        console.log("[CEF] Закрытие окна склада ВЧ");
+      }
+    }
+
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeWarehouse();
+      }
+    });
+  </script>
+</body>
+</html>

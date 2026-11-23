@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>Amazing Hint</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        background-color: transparent !important;
+        font-family: Arial, sans-serif;
+      }
+
+      /* Контейнер подсказки */
+      #message {
+        display: inline-flex;
+        align-items: center;
+        background-color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        font-size: 1.2em;
+        color: #000000;
+        position: fixed;
+        bottom: -100px; /* Изначально спрятана под экраном */
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.3s ease, bottom 0.3s ease;
+        z-index: 999999;
+      }
+
+      /* Класс плавного появления */
+      #message.active {
+        bottom: 15vh;
+        opacity: 1;
+      }
+
+      /* Кнопка */
+      #key {
+        display: inline-block;
+        background-color: #232323;
+        color: #ffffff;
+        padding: 0 10px;
+        margin-left: 10px;
+        font-weight: bold;
+        border-radius: 4px;
+        min-width: 35px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        white-space: nowrap;
+        box-sizing: border-box;
+        border-bottom: 3px solid #111111;
+        text-transform: uppercase;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="message">
+      <span>Используйте клавишу</span>
+      <div id="key">ALT</div>
+    </div>
+
+    <script>
+      // Инициализация CEF объекта
+      window.cef = window.cef || {
+        emit: function (eventName, data) {},
+        on: function (eventName, callback) {
+          window.cef[eventName] = callback;
+        }
+      };
+
+      const msg = document.getElementById('message');
+
+      // Функции, которые вызываются триггерами из Павна
+      function showHint() {
+        msg.classList.add('active');
+      }
+
+      function hideHint() {
+        msg.classList.remove('active');
+      }
+
+      // Регистрируем новые точные триггеры
+      window.cef.on("hint:show", showHint);
+      window.cef.on("hint:hide", hideHint);
+    </script>
+  </body>
+</html>

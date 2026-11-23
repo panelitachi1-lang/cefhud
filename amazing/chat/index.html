@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CEF Chat</title>
+    <link rel="stylesheet" href="assets/chat.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+</head>
+<body>
+
+<div class="chat-wrap" :style="containerStyle" v-cloak>
+
+    <div class="hints-area" v-if="chatShowInput && showHintsBox">
+
+        <template v-if="chatInput.split(' ').length <= 1">
+            <div v-for="cmd in chatFilteredCommands"
+                 :key="cmd.name"
+                 class="hint-row"
+                 @click="selectCommand(cmd.name)">
+                <div class="cmd-badge" :class="cmd.isAdmin ? 'admin-cmd' : 'user-cmd'">{{ cmd.name }}</div>
+                <div class="cmd-args-list" v-if="cmd.args">
+                    <div v-for="arg in cmd.args" :key="arg.name" class="arg-item">{{ arg.name }}</div>
+                </div>
+                <span v-else class="hint-desc">{{ cmd.desc }}</span>
+            </div>
+        </template>
+
+        <template v-else-if="currentArgOptions && currentArgOptions.length > 0">
+            <div v-for="opt in currentArgOptions"
+                 :key="opt.value"
+                 class="opt-row"
+                 @click="selectOption(opt.name)">
+                <span class="opt-val">{{ opt.value }}</span>
+                <span class="opt-name">{{ opt.name }}</span>
+            </div>
+        </template>
+
+    </div>
+    <div class="chat-messages" ref="chatMessages" :style="chatStyle">
+        <div v-for="message in chatMessages"
+             :key="message.id"
+             class="chat-message"
+             :class="{fading: message.fading}">
+            <span class="msg-time" v-if="settings.showTime">{{ message.time }}</span>
+            <span v-html="message.text"></span>
+        </div>
+    </div>
+    <div class="input-row" v-show="chatShowInput">
+        <input id="chat-input"
+               type="text"
+               v-model="chatInput"
+               @input="filterCommands"
+               @keydown="handleKeyDown"
+               spellcheck="false"
+               autocomplete="off"
+               placeholder="">
+        <span class="lang-ind" v-if="chatInput.length > 0">{{ lang }}</span>
+        <span class="gear-btn" @click="chatShowSettings = !chatShowSettings">&#9881;</span>
+    </div>
+    <transition name="slide">
+        <div class="settings-panel" v-if="chatShowSettings">
+            <div class="settings-title">Настройки чата</div>
+            <div class="setting-row">
+                <span>Размер текста</span>
+                <input type="range" min="12" max="22" v-model="settings.fontSize" @input="saveSettings">
+            </div>
+            <div class="setting-row">
+                <span>Высота</span>
+                <input type="range" min="10" max="50" v-model="settings.chatHeight" @input="saveSettings">
+            </div>
+            <div class="setting-row">
+                <span>Ширина ({{ settings.chatWidth }}px)</span>
+                <input type="range" min="300" max="800" v-model="settings.chatWidth" @input="saveSettings">
+            </div>
+            <label class="check-row">
+                <input type="checkbox" v-model="settings.showTime" @change="saveSettings">
+                Время сообщений
+            </label>
+        </div>
+    </transition>
+</div>
+<script src="assets/chat.js"></script>
+</body>
+</html>

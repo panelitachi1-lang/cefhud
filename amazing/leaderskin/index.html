@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Выбор скина лидера</title>
+  <style>
+    @font-face{font-family:"Proxima Nova Bold";src:url("css/fonts/ProximaNova-Bold.ttf") format("truetype");}
+    @font-face{font-family:"Gotham-Medium";src:url("css/fonts/Gotham Pro Medium.ttf");}
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:transparent;font-family:"Proxima Nova Bold",sans-serif;height:100vh;width:100vw;display:flex;flex-direction:column;justify-content:space-between;user-select:none;overflow:hidden;position:relative;}
+    .bg{display:block;position:fixed;top:0;left:0;width:100%;height:100%;background:url("backrayng.png") center center / cover no-repeat;z-index:0;opacity:1;}
+    .fraction-title{position:absolute;top:30px;left:50%;transform:translateX(-50%);z-index:10;font-family:"Gotham-Medium",sans-serif;font-size:13px;color:rgba(255,255,255,0.5);letter-spacing:1px;text-transform:uppercase;}
+    .target-info{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:10;font-family:"Gotham-Medium",sans-serif;font-size:11px;color:rgba(255,255,255,0.3);}
+    .skin-display-container{position:relative;z-index:5;margin:auto;display:flex;justify-content:center;align-items:center;height:65vh;}
+    .skin-preview-img{max-height:100%;max-width:100%;object-fit:contain;filter:drop-shadow(0 10px 20px rgba(0,0,0,0.3)) brightness(1.4);transition:opacity 0.15s ease-in-out;}
+    .controls-container{position:relative;z-index:10;width:100%;padding:0 60px 45px 60px;display:flex;justify-content:space-between;align-items:center;}
+    .left-controls{display:flex;align-items:center;gap:30px;}
+    .control-group{display:flex;align-items:center;gap:12px;}
+    .btn-circle{width:42px;height:42px;border-radius:50%;background:rgba(17,17,18,0.85);border:1px solid rgba(255,255,255,0.05);display:flex;justify-content:center;align-items:center;cursor:pointer;transition:background 0.2s,transform 0.1s;}
+    .btn-circle:hover{background:rgba(30,30,32,0.95);}
+    .btn-circle:active{transform:scale(0.95);}
+    .btn-circle img{width:14px;height:14px;object-fit:contain;}
+    .close-icon{width:12px;height:12px;position:relative;}
+    .close-icon::before,.close-icon::after{content:"";position:absolute;top:50%;left:50%;width:12px;height:2px;background:#a4a4a6;border-radius:1px;}
+    .close-icon::before{transform:translate(-50%,-50%) rotate(45deg);}
+    .close-icon::after{transform:translate(-50%,-50%) rotate(-45deg);}
+    .control-hint{font-family:"Gotham-Medium",sans-serif;font-size:11px;color:#8c8c8e;line-height:14px;max-width:160px;}
+    .btn-select{width:180px;height:44px;background:#ffffff;border:none;border-radius:2px;color:#000;font-family:"Proxima Nova Bold",sans-serif;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2);transition:background 0.2s,transform 0.1s;}
+    .btn-select:hover{background:#e6e6e6;}
+    .btn-select:active{transform:scale(0.98);}
+    .skin-counter{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:"Gotham-Medium",sans-serif;font-size:12px;color:rgba(255,255,255,0.4);z-index:10;}
+  </style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="fraction-title" id="fractionTitle">Выбор скина</div>
+  <div class="target-info" id="targetInfo"></div>
+  <div class="skin-display-container">
+    <img id="skinPreview" class="skin-preview-img" alt="">
+  </div>
+  <div class="skin-counter" id="skinCounter">1 / 1</div>
+  <div class="controls-container">
+    <div class="left-controls">
+      <div class="control-group">
+        <div class="btn-circle" onclick="triggerAction('close')"><div class="close-icon"></div></div>
+        <div class="control-hint">Используйте ESC,<br>чтобы закрыть меню</div>
+      </div>
+      <div class="control-group">
+        <div style="display:flex;gap:8px;">
+          <div class="btn-circle" onclick="triggerAction('left')"><img src="imges/levo.png" alt="<"></div>
+          <div class="btn-circle" onclick="triggerAction('right')"><img src="imges/pravo.png" alt=">"></div>
+        </div>
+        <div class="control-hint">Для выбора одежды<br>используйте стрелочки</div>
+      </div>
+    </div>
+    <button class="btn-select" onclick="triggerAction('select')">Выбрать</button>
+  </div>
+
+  <script>
+    // Папки скинов по ID скина
+    var SKIN_FOLDER = {
+      // Правительство [1]
+      227:'pravik',211:'pravik',187:'pravik',164:'pravik',130:'pravik',141:'pravik',147:'pravik',59:'pravik',295:'pravik',
+      // ФСБ [2]
+      163:'imges',166:'imges',167:'imges',286:'imges',165:'imges',271:'imges',137:'imges',175:'imges', 285:'imges', 184:'imges', 203:'imges',
+      // ДПС [3]
+      106:'gai',282:'gai',281:'gai',266:'gai',284:'gai',280:'gai',283:'gai',
+      // ППС [4]
+      288:'pss',158:'pss',133:'pss',267:'pss',12:'pss',265:'pss',76:'pss',153:'pss',
+      // ЕСС [5]
+      70:'ecc',148:'ecc',274:'ecc',275:'ecc',276:'ecc',
+      // ВЧ [6]
+      61:'vh',73:'vh',206:'vh',179:'vh',191:'vh',180:'vh',183:'vh',185:'vh',186:'vh',
+      // Байкеры [7]
+      193:'imges',114:'imges',115:'imges',116:'imges',292:'imges',
+      // Скинхеды [8]
+      122:'imges',123:'imges',124:'imges',126:'imges',
+      // Русская мафия [9]
+      98:'imges',46:'imges',121:'imges',125:'imges',
+      // Кавказская мафия [10]
+      // используют те же папки что выше
+    };
+
+    var FRACTION_SKINS = {
+      1:  [227,211,187,164,130,141,147,59,295],  // Правительство
+      2: [163, 166, 167, 286, 165, 285, 175, 184, 203],          // ФСБ
+      3:  [106,282,281,266,284,280,283],          // ДПС
+      4:  [106,288,158,133,267,12,265,76,153],    // ППС
+      5:  [70,148,274,275,276],                   // ЕСС
+      6:  [61,73,206,179,191,180,183,185,186],    // ВЧ
+      7:  [193,114,115,116,292],                  // Байкеры
+      8:  [142,123,124,126],                      // Скинхеды
+      9:  [98,46,121,125],                        // Русская мафия
+      10: [193,114,115,116,294]                   // Кавказская мафия
+    };
+
+    var FRACTION_NAMES = {
+      1:'Правительство области',
+      2:'Федеральная служба безопасности',
+      3:'Дорожно-патрульная служба',
+      4:'Патрульно-постовая служба',
+      5:'Единая служба спасения',
+      6:'Воинская часть',
+      7:'Байкеры',
+      8:'Скинхеды',
+      9:'Русская мафия',
+      10:'Кавказская мафия'
+    };
+
+    var currentSkins=[],currentIndex=0,targetPlayerId=-1,currentFraction=1;
+
+    function getSkinPath(skinId){
+      var folder=SKIN_FOLDER[skinId]||'imges';
+      return folder+'/'+skinId+'.png';
+    }
+
+    function init(fractionId,targetId,targetName){
+      currentFraction=fractionId; targetPlayerId=targetId;
+      currentSkins=(FRACTION_SKINS[fractionId]||[]).filter(function(s){return s>0;});
+      currentIndex=0;
+      document.getElementById('fractionTitle').innerText=FRACTION_NAMES[fractionId]||('Фракция '+fractionId);
+      document.getElementById('targetInfo').innerText=targetName?('Игрок: '+targetName+' ['+targetId+']'):'';
+      updatePreview();
+    }
+
+    function updatePreview(){
+      if(!currentSkins.length) return;
+      var img=document.getElementById('skinPreview');
+      var counter=document.getElementById('skinCounter');
+      img.style.opacity=0;
+      setTimeout(function(){
+        img.src=getSkinPath(currentSkins[currentIndex]);
+        img.style.opacity=1;
+      },100);
+      counter.innerText=(currentIndex+1)+' / '+currentSkins.length;
+    }
+
+    function triggerAction(action){
+      if(action==='left'){currentIndex=currentIndex===0?currentSkins.length-1:currentIndex-1;updatePreview();}
+      else if(action==='right'){currentIndex=currentIndex===currentSkins.length-1?0:currentIndex+1;updatePreview();}
+      else if(action==='select'){if(typeof cef!=='undefined')cef.emit('leaderskin:select',targetPlayerId,currentSkins[currentIndex]);}
+      else if(action==='close'){if(typeof cef!=='undefined')cef.emit('leaderskin:close');}
+    }
+
+    document.addEventListener('keydown',function(e){
+      if(e.keyCode===27)triggerAction('close');
+      if(e.keyCode===37)triggerAction('left');
+      if(e.keyCode===39)triggerAction('right');
+      if(e.keyCode===13)triggerAction('select');
+    });
+
+    if(typeof cef!=='undefined'){
+      cef.on('leaderskin:open',function(fractionId,targetId,targetName){
+        init(fractionId,targetId,targetName);
+      });
+    } else {
+      init(2,0,'Test_Player');
+    }
+  </script>
+</body>
+</html>

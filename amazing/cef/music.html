@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        :root { 
+            --green: #1db954; 
+            --bg-blur: rgba(18, 18, 18, 0.85); 
+            --text-main: #ffffff;
+            --text-grey: #b3b3b3; 
+        }
+
+        body { 
+            margin: 0; padding: 0; background: transparent; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
+            color: white; user-select: none; 
+            display: flex; justify-content: center; align-items: center; height: 100vh; 
+        }
+
+        #player-window {
+            position: absolute; width: 360px; background: var(--bg-blur); backdrop-filter: blur(15px);
+            border-radius: 12px; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: none; flex-direction: column; border: 1px solid rgba(255,255,255,0.05);
+        }
+		#player-window:active {
+			cursor: grabbing;   
+		}
+        .track-list { max-height: 280px; overflow-y: auto; margin-bottom: 15px; }
+        .track-list::-webkit-scrollbar { width: 0px; }
+
+        .track-item {
+            display: flex; align-items: center; padding: 10px; border-radius: 6px; 
+            cursor: pointer; transition: 0.2s;
+        }
+        .track-item:hover { background: rgba(255,255,255,0.08); }
+        .track-item.active { background: rgba(255,255,255,0.1); }
+        .track-item.active .name { color: var(--green); }
+        
+        .track-item .num { width: 25px; color: var(--text-grey); font-size: 13px; }
+        .track-item .info { flex-grow: 1; pointer-events: none; }
+        .track-item .name { font-weight: 500; font-size: 14px; display: block; }
+        .track-item .artist { font-size: 11px; color: var(--text-grey); }
+
+        .current-status {
+            background: rgba(255, 255, 255, 0.07); border-radius: 20px; 
+            padding: 8px 15px; display: flex; align-items: center; gap: 10px; 
+            font-size: 12px; margin-bottom: 15px; justify-content: center; color: var(--text-grey);
+        }
+        .status-icon { color: var(--green); font-weight: bold; }
+
+        .slider-container { cursor: pointer; height: 12px; display: flex; align-items: center; }
+        .slider-bg { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; position: relative; }
+        .slider-fill { height: 100%; background: white; border-radius: 2px; width: 0%; pointer-events: none; transition: width 0.1s linear;}
+        .slider-bg:hover .slider-fill { background: var(--green); }
+
+        .time-row { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-grey); margin-bottom: 4px; }
+
+        .buttons-row { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; margin-bottom: 20px; }
+        .icon-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 30px;
+			height: 30px;
+		}
+        .icon-btn:hover { color: white; transform: scale(1.1); }
+        .play-btn svg {
+			margin-left: 2px; 
+		}
+		.icon-btn:active, .play-btn:active {
+			transform: scale(0.9);
+		}
+        .play-btn { 
+            width: 50px; height: 50px; background: white; color: black; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer;
+        }
+
+        .footer-row { display: flex; gap: 10px; }
+        .power-btn {
+            flex-grow: 1; background: rgba(255, 255, 255, 0.08); border: none; color: white; padding: 12px;
+            border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+		.cloud-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: 0.3s;
+		}
+		.cloud-btn:active svg {
+			transform: rotate(180deg);
+			transition: 0.2s;
+		}
+    </style>
+</head>
+<body>
+
+<div id="player-window">
+    <div id="track-list" class="track-list"></div>
+
+    <div class="controls-container">
+        <div class="current-status">
+            <span class="status-icon">|||</span>
+            <span id="ui-current-track">Выберите песню</span>
+        </div>
+
+        <div class="time-row"><span id="time-current">00:00</span> <span id="time-max">00:00</span></div>
+        <div class="slider-container" id="progress-container">
+            <div class="slider-bg"><div id="ui-progress" class="slider-fill"></div></div>
+        </div>
+
+		<div class="buttons-row">
+			<!-- Повтор -->
+			<div class="icon-btn" onclick="action('repeat')">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+			</div>
+			
+			<!-- Назад -->
+			<div class="icon-btn" onclick="changeTrack(-1)">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="19 20 9 12 19 4 19 20"></polygon><rect x="5" y="4" width="2" height="16"></rect></svg>
+			</div>
+
+			<!-- Play / Pause -->
+			<div id="ui-play-btn" class="play-btn" onclick="togglePlay()">
+				<svg id="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+			</div>
+
+			<!-- Вперед -->
+			<div class="icon-btn" onclick="changeTrack(1)">
+				<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"></polygon><rect x="17" y="4" width="2" height="16"></rect></svg>
+			</div>
+
+			<!-- Перемешать -->
+			<div class="icon-btn" onclick="action('shuffle')">
+				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>
+			</div>
+		</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 12px; color: var(--text-grey);">🔈</span>
+            <div class="slider-container" id="volume-container" style="flex-grow: 1;">
+                <div class="slider-bg"><div id="ui-volume" class="slider-fill" style="width: 70%;"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-row" style="margin-top: 20px;">
+		<button class="power-btn" onclick="minimizeMusic()" style="background: rgba(255, 255, 255, 0.05);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>Свернуть</button>
+        <button class="power-btn" onclick="closeMusic()"> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 5px;"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg> Выключить</button>
+		<button class="cloud-btn" onclick="refreshMusicList()" title="Обновить список"><svg id="refresh-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+    </button>
+    </div>
+</div>
+
+<script>
+    let currentAudio = null;
+    let isPlaying = false;
+    let currentTrackIndex = -1;
+	let isRepeat = false;   // Состояние повтора
+	let isShuffle = false;  // Состояние перемешивания
+	let carPos = { x: 0, y: 0, z: 0 };
+	let baseVolume = 0.8; // Громкость из ползунка плеера
+    let userVolume = 0.8; 
+	let adminMusicActive = false;
+	cef.on("music:update3d", (dist) => {
+		let d = parseFloat(dist);
+		let nameElement = document.getElementById('ui-current-track');
+
+		
+		if(nameElement) {
+			nameElement.innerText = "Debug Dist: " + d.toFixed(1) + "m | Vol: " + (currentAudio ? currentAudio.volume.toFixed(2) : "no audio");
+		}
+		// --------------------------------------
+
+		if (currentAudio) {
+			// Если d = 0 (в упор), fade = 1. Если d = 30 (далеко), fade = 0.
+			let fade = 1 - (d / 30);
+			
+			if (fade < 0) fade = 0;
+			if (fade > 1) fade = 1;
+
+			// Применяем громкость (0.8 - твоя макс. громкость)
+			currentAudio.volume = 0.8 * fade;
+		}
+	});
+	// 1. Добавление трека
+	cef.on("addTrackToMenu", (id, name, url) => {
+		const list = document.getElementById('track-list');
+		const index = list.children.length; // Запоминаем порядковый номер
+		let item = document.createElement('div');
+		item.className = 'track-item';
+		item.dataset.url = url; // <--- ВАЖНО: сохраняем ссылку здесь
+		
+		item.innerHTML = `
+			<div class="num">${id}</div>
+			<div class="info"><span class="name">${name}</span></div>
+		`;
+		
+		item.onclick = function() { playByIndex(index); };
+		list.appendChild(item);
+	});
+	cef.on("admin:playGlobal", (url, name) => {
+		// Останавливаем то, что играло до этого (машину/колонку)
+		if(currentAudio) { currentAudio.pause(); currentAudio.src = ""; }
+
+		currentAudio = new Audio(url);
+		currentAudio.volume = 0.4; // Не на всю громкость, бережем уши
+		adminMusicActive = true;
+
+		currentAudio.play().then(() => {
+			isPlaying = true;
+			document.getElementById('ui-current-track').innerText = "📢 ЭФИР: " + name;
+			updatePlayBtn();
+			
+			// Показываем окно плеера, если оно было скрыто, чтобы игрок мог выключить
+			document.getElementById('player-window').style.display = 'flex';
+		});
+	});
+	function setBaseVolume(val) {
+		baseVolume = val / 100;
+		if(currentAudio) currentAudio.volume = baseVolume;
+	}
+	function minimizeMusic() {
+		// 1. Скрываем само окно
+		document.getElementById('player-window').style.display = 'none';
+		
+		// 2. Отключаем фокус мыши, чтобы можно было бегать/стрелять в игре
+		cef.set_focus(false);
+		
+		// 3. Отправляем событие на сервер, чтобы он знал, что меню скрыто
+		cef.emit("game:onMusicMinimized"); 
+	}
+    function playByIndex(index) {
+		const tracks = document.querySelectorAll('.track-item');
+		if (index < 0 || index >= tracks.length) return;
+
+		currentIndex = index;
+		const target = tracks[index];
+		const name = target.querySelector('.name').innerText;
+		const url = target.dataset.url;
+
+		document.querySelectorAll('.track-item').forEach(t => t.classList.remove('active'));
+		target.classList.add('active');
+
+		startMusic(name, url);
+		
+		// ОТПРАВЛЯЕМ СТАТУС 1 (Играет)
+		cef.emit("music:status", 1); 
+	}
+
+	function startMusic(name, url) {
+    // 1. Очистка старого аудио
+		if(currentAudio) { 
+			currentAudio.pause(); 
+			currentAudio.src = ""; 
+		}
+
+		// 2. Создание нового потока
+		currentAudio = new Audio(url);
+		
+		// 3. ЛОГИКА ОБНОВЛЕНИЯ ДОРОЖКИ И ВРЕМЕНИ
+		currentAudio.ontimeupdate = function() {
+			if (!currentAudio.duration) return;
+
+			let progressPercent = (currentAudio.currentTime / currentAudio.duration) * 100;
+			
+			let fill = document.getElementById('ui-progress');
+			if(fill) fill.style.width = progressPercent + "%";
+			
+			let currentTimeEl = document.getElementById('time-current');
+			if(currentTimeEl) currentTimeEl.innerText = formatTime(currentAudio.currentTime);
+			
+			let maxTimeEl = document.getElementById('time-max');
+			if(maxTimeEl) maxTimeEl.innerText = formatTime(currentAudio.duration);
+		};
+
+		currentAudio.onended = function() {
+			if (isRepeat) {
+				playByIndex(currentIndex); 
+			} else {
+				changeTrack(1); 
+			}
+		};
+
+		// 4. Запуск
+		currentAudio.play().then(() => {
+			isPlaying = true;
+			document.getElementById('ui-current-track').innerText = name;
+			if(typeof updatePlayBtn === "function") updatePlayBtn();
+
+			// --- ДОБАВЛЕНО: СИНХРОНИЗАЦИЯ С СЕРВЕРОМ ---
+			cef.emit("music:status", "1");    // Меняет текст на "Играет" (в авто или колонке)
+			cef.emit("music:startSync", url); // Запускает таймер координат в Pawn
+			// -------------------------------------------
+
+		}).catch(e => console.log("Ошибка воспроизведения: " + e));
+	}
+
+
+
+    // 2. Перемотка
+    document.getElementById('progress-container').onclick = function(e) {
+		if(!currentAudio || !currentAudio.duration) return;
+		
+		// Считаем место клика относительно ширины контейнера
+		let rect = this.getBoundingClientRect();
+		let x = e.clientX - rect.left;
+		let width = rect.width;
+		let percent = x / width;
+		
+		// Устанавливаем время в аудио
+		currentAudio.currentTime = percent * currentAudio.duration;
+	};
+    // 3. Громкость
+    document.getElementById('volume-container').onclick = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        document.getElementById('ui-volume').style.width = (percent * 100) + "%";
+        if(currentAudio) currentAudio.volume = percent;
+    };
+		// Функция для кнопки Повтор
+	function toggleRepeat(el) {
+		isRepeat = !isRepeat;
+		el.style.color = isRepeat ? "var(--green)" : "var(--text-grey)";
+	}
+
+	// Функция для кнопки Перемешать
+	function toggleShuffle(el) {
+		isShuffle = !isShuffle;
+		el.style.color = isShuffle ? "var(--green)" : "var(--text-grey)";
+	}
+    // 4. Переключение 
+    function changeTrack(dir) {
+		const tracks = document.querySelectorAll('.track-item');
+		if (tracks.length === 0) return;
+
+		let nextIndex;
+
+		if (isShuffle && dir === 1) {
+			// Если перемешивание — выбираем случайный
+			nextIndex = Math.floor(Math.random() * tracks.length);
+		} else {
+			// Обычный порядок
+			nextIndex = currentIndex + dir;
+			if (nextIndex >= tracks.length) nextIndex = 0; // В начало
+			if (nextIndex < 0) nextIndex = tracks.length - 1; // В конец
+		}
+
+		playByIndex(nextIndex);
+	}
+
+    function togglePlay() {
+		if(!currentAudio) return;
+		if(isPlaying) {
+			currentAudio.pause();
+			isPlaying = false;
+			cef.emit("music:status", 0); // СТАТУС 0 (На паузе)
+			if(adminMusicActive) adminMusicActive = false; 
+		} else {
+			currentAudio.play();
+			isPlaying = true;
+			cef.emit("music:status", 1); // СТАТУС 1 (Играет)
+		}
+		updatePlayBtn();
+	}
+
+    function updatePlayBtn() {
+		// Здесь просто меняем текст или иконку на кнопке
+		document.getElementById('ui-play-btn').innerText = isPlaying ? "❙❙" : "▶";
+	}
+
+
+    function formatTime(seconds) {
+		if (isNaN(seconds) || seconds === Infinity) return "00:00";
+		let m = Math.floor(seconds / 60);
+		let s = Math.floor(seconds % 60);
+		return (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+	}
+
+    cef.on("openMusicMenu", () => {
+		document.getElementById('player-window').style.display = 'flex';
+		cef.set_focus(true);
+	});
+
+    function closeMusic() {
+		document.getElementById('player-window').style.display = 'none';
+		cef.set_focus(false);
+		if(currentAudio) { currentAudio.pause(); isPlaying = false; updatePlayBtn(); }
+	}
+	const playerWindow = document.getElementById('player-window');
+	let isDragging = false;
+	let offset = { x: 0, y: 0 };
+
+	// Когда нажали кнопку мыши на окне
+	playerWindow.addEventListener('mousedown', (e) => {
+		// Если кликнули на кнопку или ползунок — не тащим (чтобы кнопки работали)
+		if (e.target.closest('button') || e.target.closest('.slider-container') || e.target.closest('.track-item')) return;
+
+		isDragging = true;
+		
+		// Считаем разницу между курсором и краем окна
+		offset.x = e.clientX - playerWindow.offsetLeft;
+		offset.y = e.clientY - playerWindow.offsetTop;
+	});
+
+
+	window.addEventListener('mousemove', (e) => {
+		if (!isDragging) return;
+
+		// Вычисляем новые координаты
+		let newX = e.clientX - offset.x;
+		let newY = e.clientY - offset.y;
+
+		// Применяем координаты к окну
+		playerWindow.style.left = newX + 'px';
+		playerWindow.style.top = newY + 'px';
+		
+		
+		playerWindow.style.margin = '0';
+		playerWindow.style.transform = 'none';
+	});
+
+
+	window.addEventListener('mouseup', () => {
+		isDragging = false;
+	});
+</script>
+</body>
+</html>

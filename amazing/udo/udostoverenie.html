@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Удостоверение</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100vw;height:100vh;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.udo-wrap{display:none;}
+.udo-wrap.active{display:block;}
+.card{position:relative;display:inline-block;}
+.card img.bg{display:block;border-radius:10px;}
+.card::after{
+    content:"";
+    position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    border-radius:10px;
+    box-shadow:inset 0 0 40px 10px rgba(0,0,0,0.25);
+    pointer-events:none;
+}
+/* обводка только для универсальных */
+#udo-uni .card::before{
+    content:"";
+    position:absolute;
+    top:-12px;left:-12px;right:-12px;bottom:-12px;
+    border-radius:16px;
+    background:rgba(0,0,0,0.35);
+    z-index:-1;
+}
+.field{
+    position:absolute;
+    font-family:Arial,sans-serif;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+#fsb .f-rank  {left:690px;top:148px;font-size:15px;font-weight:700;color:#1a3a5c;max-width:460px;}
+#fsb .f-name  {left:690px;top:176px;font-size:13px;color:#1a3a5c;max-width:460px;}
+#fsb .f-otdel {left:590px;top:220px;font-size:13px;color:#1a3a5c;max-width:360px;}
+
+#mvd .f-rank  {left:690px;top:152px;font-size:15px;font-weight:700;color:#5a0a14;max-width:460px;}
+#mvd .f-name  {left:690px;top:178px;font-size:13px;color:#5a0a14;max-width:460px;}
+#mvd .f-otdel {left:590px;top:202px;font-size:12px;color:#5a0a14;max-width:400px;}
+
+#uni .f-surname {left:470px;top:148px;font-size:14px;color:#2a2a4a;max-width:380px;}
+#uni .f-name    {left:470px;top:178px;font-size:14px;color:#2a2a4a;max-width:380px;}
+#uni .f-sex     {left:470px;top:210px;font-size:14px;color:#2a2a4a;max-width:200px;}
+#uni .f-org     {left:470px;top:279px;font-size:13px;color:#2a2a4a;max-width:380px;}
+#uni .f-rank    {left:520px;top:310px;font-size:13px;color:#2a2a4a;max-width:380px;}
+#uni .f-otdel   {left:470px;top:340px;font-size:13px;color:#2a2a4a;max-width:380px;}
+</style>
+</head>
+<body>
+
+<div class="udo-wrap" id="udo-fsb">
+  <div class="card" id="fsb">
+    <img class="bg" src="fsb.png">
+    <div class="field f-rank"  id="fsb-rank"></div>
+    <div class="field f-name"  id="fsb-name"></div>
+    <div class="field f-otdel" id="fsb-otdel"></div>
+  </div>
+</div>
+
+<div class="udo-wrap" id="udo-mvd">
+  <div class="card" id="mvd">
+    <img class="bg" src="ppsgaiudo.png">
+    <div class="field f-rank"  id="mvd-rank"></div>
+    <div class="field f-name"  id="mvd-name"></div>
+    <div class="field f-otdel" id="mvd-otdel"></div>
+  </div>
+</div>
+
+<div class="udo-wrap" id="udo-uni">
+  <div class="card" id="uni">
+    <img class="bg" id="uni-bg" src="pravikudo.png">
+    <div class="field f-surname" id="uni-surname"></div>
+    <div class="field f-name"    id="uni-name2"></div>
+    <div class="field f-sex"     id="uni-sex"></div>
+    <div class="field f-org"     id="uni-org"></div>
+    <div class="field f-rank"    id="uni-rank"></div>
+    <div class="field f-otdel"   id="uni-otdel"></div>
+  </div>
+</div>
+
+<script>
+const TEST={frac:1,name:'Vyacheslav_Dobrinin',uid:14761,rank:'Генерал-майор',otdel:'Отсутствует',fracname:'Правительство области',sex:'Мужской'};
+
+function splitName(n){const p=n.split('_');return{s:p[0]||'',n:p[1]||''};}
+
+function showUdo(d){
+    document.querySelectorAll('.udo-wrap').forEach(x=>x.classList.remove('active'));
+    const nm=splitName(d.name||'');
+    if(d.frac===2){
+        document.getElementById('fsb-rank').textContent=d.rank||'';
+        document.getElementById('fsb-name').textContent=d.name||'';
+        document.getElementById('fsb-otdel').textContent=d.otdel||'—';
+        document.getElementById('udo-fsb').classList.add('active');
+    } else if(d.frac===3||d.frac===4){
+        document.getElementById('mvd-rank').textContent=d.rank||'';
+        document.getElementById('mvd-name').textContent=d.name||'';
+        document.getElementById('mvd-otdel').textContent=d.otdel||'—';
+        document.getElementById('udo-mvd').classList.add('active');
+    } else {
+        const bgMap={1:'pravikudo.png',5:'essudo.png',6:'udovch.png'};
+        document.getElementById('uni-bg').src=bgMap[d.frac]||'pravikudo.png';
+        document.getElementById('uni-surname').textContent=nm.s;
+        document.getElementById('uni-name2').textContent=nm.n;
+        document.getElementById('uni-sex').textContent=d.sex||'Мужской';
+        document.getElementById('uni-org').textContent=d.fracname||'';
+        document.getElementById('uni-rank').textContent=d.rank||'';
+        document.getElementById('uni-otdel').textContent=d.otdel||'—';
+        document.getElementById('udo-uni').classList.add('active');
+    }
+}
+
+if(typeof cef==='undefined') showUdo(TEST);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&typeof cef!=='undefined')cef.emit('udo:close','1');});
+if(typeof cef!=='undefined'){
+    cef.on('udo:show',json=>{try{showUdo(JSON.parse(json));}catch(e){}});
+}
+window.onload=()=>{if(typeof cef!=='undefined')cef.emit('udo:ready','1');};
+</script>
+</body>
+</html>

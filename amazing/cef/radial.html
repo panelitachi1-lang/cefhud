@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com" rel="stylesheet">
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; font-family: 'Montserrat', sans-serif; }
+        
+        #radial-root {
+            position: fixed; inset: 0;
+            display: none; align-items: center; justify-content: center;
+            background: rgba(0, 0, 0, 0.4); z-index: 9999;
+        }
+        #radial-root[data-visible="true"] { display: flex; }
+
+        .radial-container { position: relative; width: 640px; height: 640px; }
+
+        .sector {
+            fill: rgba(25, 25, 25, 0.9);
+            stroke: rgba(255, 255, 255, 0.2); 
+            stroke-width: 2;
+            transition: all 0.1s ease;
+        }
+
+        .sector.active { 
+            fill: #FF6D1D; 
+            stroke: rgba(255, 255, 255, 0.5);
+        }
+
+        .icon-item {
+            position: absolute; width: 60px; height: 60px;
+            transform: translate(-50%, -50%);
+            display: flex; align-items: center; justify-content: center;
+            fill: #fff; pointer-events: none; z-index: 5;
+            transition: transform 0.1s ease;
+        }
+        .icon-item.active { transform: translate(-50%, -50%) scale(1.2); }
+        .icon-item svg { width: 45px; height: 45px; }
+
+        .center-circle {
+            position: absolute; top: 50%; left: 50%;
+            width: 260px; height: 260px;
+            transform: translate(-50%, -50%);
+            background: rgba(15, 15, 15, 0.95);
+            border-radius: 50%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            color: #fff; border: 2px solid rgba(255, 255, 255, 0.1);
+            z-index: 10;
+        }
+        .center-circle.active { background: #FF6D1D; border: none; box-shadow: 0 0 40px rgba(255, 109, 29, 0.5); }
+
+        .center-title { font-weight: 800; font-size: 24px; margin-bottom: 5px; text-transform: uppercase; }
+        .center-hint { font-size: 16px; font-weight: 600; opacity: 0.8; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div id="radial-root" data-visible="false">
+    <div class="radial-container">
+        <svg id="radial-svg" viewBox="0 0 640 640" width="640" height="640">
+            <g id="sectors-group"></g>
+        </svg>
+        <div id="icons-group"></div>
+        
+        <div class="center-circle" id="center-node">
+            <div class="center-title" id="action-label">Меню</div>
+            <div class="center-hint">ЛКМ - Выбрать</div>
+            <div class="center-hint">ПКМ - Закрыть</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const CX = 320, CY = 320, OUTER_R = 300, INNER_R = 135, ICON_R = 215;
+    const COUNT = 8, STEP = 45, ROTATION = -22.5;
+
+    const iconsSVG = {
+        groups: `<svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z""")/>></svg>`,
+        favorite: `<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z""")/>></svg>`,
+        medication: `<svg viewBox="0 0 24 24"><path d="M6 3h12v2H6zm11 3H7c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 9h-2.5V17.5h-3V15H8v-3h2.5V9.5h3V12H16v3z""")/>></svg>`,
+        podcasts: `<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z""")/>></svg>`,
+        watch: `<svg viewBox="0 0 24 24"><path d="M12 20c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zM7 1h10v3H7zM7 20h10v3H7z""")/>></svg>`,
+        run: `<svg viewBox="0 0 24 24"><path d="M13.49 14.95V11l-2.21-1.21L10.2 13.5l1.92 1.45zM12.12 5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 20.25L7.05 21l2.1-4.92 5.15 1.58c.95.3 1.95-.25 2.25-1.2l.65-2.1c.3-.95-.25-1.95-1.2-2.25l-5.15-1.58-1.1-2.7c-.3-.7-.95-1.2-1.7-1.2-.3 0-.55.05-.85.15l-4.25 1.45c-.85.3-1.35 1.25-1.05 2.1l1.5 4.35L5 20.25z""")/>></svg>`,
+        face: `<svg viewBox="0 0 24 24"><path d="M9 11.75c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zm6 0c-.69 0-1.25.56-1.25 1.25s.56 1.25 1.25 1.25 1.25-.56 1.25-1.25-.56-1.25-1.25-1.25zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-2.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z""")/>></svg>`,
+        bolt: `<svg viewBox="0 0 24 24"><path d="M7 2v11h3v9l7-12h-4l4-8z""")/>></svg>`
+    };
+
+    const actions = [
+        { id: 0, svg: iconsSVG.groups, label: "Фракция" },
+        { id: 1, svg: iconsSVG.podcasts, label: "GPS" },
+        { id: 2, svg: iconsSVG.watch, label: "Время" },
+        { id: 3, svg: iconsSVG.run, label: "Анимации" },
+        { id: 4, svg: iconsSVG.face, label: "Маска" },
+        { id: 5, svg: iconsSVG.bolt, label: "Энергетик" },
+        { id: 6, svg: iconsSVG.medication, label: "Релаксанты" },
+        { id: 7, svg: iconsSVG.favorite, label: "Здоровье" }
+    ];
+
+    let visible = false, activeIdx = -1;
+
+    function polar(r, deg) {
+        const rad = (deg - 90) * Math.PI / 180;
+        return { x: CX + r * Math.cos(rad), y: CY + r * Math.sin(rad) };
+    }
+
+    function init() {
+        const g = document.getElementById("sectors-group");
+        const icons = document.getElementById("icons-group");
+        for (let i = 0; i < COUNT; i++) {
+            const start = ROTATION + (i * STEP);
+            const end = start + STEP;
+            const p1 = polar(OUTER_R, start), p2 = polar(OUTER_R, end), p3 = polar(INNER_R, end), p4 = polar(INNER_R, start);
+            const path = document.createElementNS("http://www.w3.org", "path");
+            path.setAttribute("d", `M ${p1.x} ${p1.y} A ${OUTER_R} ${OUTER_R} 0 0 1 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${INNER_R} ${INNER_R} 0 0 0 ${p4.x} ${p4.y} Z`);
+            path.setAttribute("class", "sector");
+            g.appendChild(path);
+
+            const iconPos = polar(ICON_R, start + STEP / 2);
+            const div = document.createElement("div");
+            div.className = "icon-item";
+            div.style.left = iconPos.x + "px"; div.style.top = iconPos.y + "px";
+            div.innerHTML = actions[i].svg;
+            icons.appendChild(div);
+        }
+    }
+
+    window.showMenu = function() {
+        document.getElementById("radial-root").dataset.visible = "true";
+        visible = true;
+        if (typeof cef !== 'undefined') cef.set_focus(true);
+    };
+
+    window.hideMenu = function() {
+        document.getElementById("radial-root").dataset.visible = "false";
+        visible = false; activeIdx = -1;
+        document.querySelectorAll('.sector, .icon-item').forEach(el => el.classList.remove('active'));
+        if (typeof cef !== 'undefined') cef.set_focus(false);
+    };
+
+    window.addEventListener("mousemove", (e) => {
+        if (!visible) return;
+        const dx = e.clientX - window.innerWidth / 2, dy = e.clientY - window.innerHeight / 2, dist = Math.hypot(dx, dy);
+        let id = -1;
+        if (dist > INNER_R && dist < OUTER_R + 50) {
+            let angle = (Math.atan2(dy, dx) * 180 / Math.PI + 450 - ROTATION) % 360;
+            id = Math.floor(angle / STEP);
+            if(id >= COUNT) id = 0;
+        }
+        if (id !== activeIdx) {
+            activeIdx = id;
+            document.querySelectorAll('.sector').forEach((s, i) => s.classList.toggle('active', i === id));
+            document.querySelectorAll('.icon-item').forEach((ic, i) => ic.classList.toggle('active', i === id));
+            document.getElementById("center-node").classList.toggle('active', id !== -1);
+            document.getElementById("action-label").innerText = id !== -1 ? actions[id].label : "Меню";
+        }
+    });
+
+    window.addEventListener("mousedown", (e) => {
+        if (visible && e.button === 0 && activeIdx !== -1) {
+            if (typeof cef !== 'undefined') cef.emit("radial:action", actions[activeIdx].id.toString());
+            window.hideMenu();
+        }
+        if (visible && e.button === 2) window.hideMenu();
+    });
+
+    if (typeof cef !== 'undefined') {
+        cef.on("radial:open", () => window.showMenu());
+    }
+
+    window.addEventListener("keyup", (e) => {
+        if (e.keyCode === 82) visible ? window.hideMenu() : window.showMenu();
+        if (e.keyCode === 27 && visible) window.hideMenu();
+    });
+
+    window.onload = init;
+</script>
+</body>
+</html>

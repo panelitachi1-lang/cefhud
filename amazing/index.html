@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>AMAZING</title>
+    <link rel="stylesheet" type="text/css" href="css/selector.css">
+    <link rel="stylesheet" type="text/css" href="css/fonts/stylesheet.css">
+    <link rel="stylesheet" type="text/css" href="css/rentscooter.css">
+    <link rel="stylesheet" type="text/css" href="css/interface.hud.css">
+    <!-- <link rel="stylesheet" type="text/css" href="css/dialogs.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/dialogs_new.css">
+    <link rel="stylesheet" type="text/css" href="css/hint.css">
+    <link rel="stylesheet" type="text/css" href="css/speedometer.css">
+    <link rel="stylesheet" type="text/css" href="css/bizstats.css">
+    <link rel="stylesheet" type="text/css" href="css/notification.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        /* background-color: black; */
+        /* background: url(images/bg.svg) no-repeat transparent; */
+        /* background-size: 200vh; */
+        /* background-position: right 0 top 0; */
+      }
+
+      #blackout {
+        position: fixed;
+        inset: 0;
+        background: black;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.7s ease;
+        z-index: 9999;
+      }
+
+      #blackout.visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="skin-selector">
+      <div class="game-interface">
+        <!-- Background texture -->
+        <div class="background"></div>
+        <div class="content">
+          <!-- Category selector -->
+          <div class="category-selector">
+            <button class="nav-arrow" id="categoryPrev">
+              <img src="images/choose/arrow-left-rounded.svg" alt="←" />
+            </button>
+            <div class="category-info">
+              <h2 class="category-title" id="categoryTitle">Одежда</h2>
+              <p class="category-price" id="categoryPrice">28 000 ₽</p>
+            </div>
+            <button class="nav-arrow" id="categoryNext">
+              <img src="images/choose/arrow-right-rounded.svg" alt="→" />
+            </button>
+          </div>
+          <!-- Bottom controls -->
+          <div class="bottom-controls">
+            <!-- Left section with close button, instructions and navigation -->
+            <div class="left-section">
+              <!-- Close button and instructions -->
+              <div class="instructions-section">
+                <button class="close-button" id="closeButton">✕</button>
+                <div class="instructions">
+                  <p>Нажмите для выхода или</p>
+                  <p>используйте ESC</p>
+                </div>
+              </div>
+              <!-- Navigation controls -->
+              <div class="navigation-controls">
+                <button class="nav-button" id="skinPrev">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                <button class="nav-button" id="skinNext">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </button>
+                <div class="nav-hint">
+                  <p>Для переключения, используйте</p>
+                  <p>стрелочки на клавиатуре</p>
+                </div>
+              </div>
+            </div>
+            <!-- Buy button -->
+            <button class="buy-button" id="buyButton">Купить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="biz-info-container" id="bizInfoContainer" style="display: none;">
+      <div class="biz-header">
+        <h2 id="station-type">АВТОМОБИЛЬНАЯ ЗАПРАВОЧНАЯ СТАНЦИЯ</h2>
+        <h1 id="station-name">Малая Эдовка</h1>
+      </div>
+      <div class="biz-status">
+        <span id="status-text" class="biz-status-text green">ОТКРЫТО</span>
+      </div>
+      <div class="biz-stats">
+        <div class="biz-stat">
+          <span id="station-number" class="biz-stat-value">51</span>
+          <span class="biz-stat-label">Номер</span>
+        </div>
+        <div class="biz-stat">
+          <span id="station-owner" class="biz-stat-value">
+            <strong>Государство</strong>
+          </span>
+          <span class="biz-stat-label">Владелец</span>
+        </div>
+        <div class="biz-stat">
+          <span id="station-price" class="biz-stat-value">9 000 000 <span class="green">₽</span>
+          </span>
+          <span class="biz-stat-label">Цена</span>
+        </div>
+        <div class="biz-stat">
+          <span id="station-roof" class="biz-stat-value">
+            <strong>Отсутствует</strong>
+          </span>
+          <span class="biz-stat-label">Крыша</span>
+        </div>
+      </div>
+    </div>
+    <div class="myNotifyWrapper" id="myNotifyContainer"></div>
+    <div id="blackout"></div>
+    <div class="speedometer">
+      <div class="wrapper">
+        <div class="backdrop"></div>
+        <!-- Speed Scale -->
+        <div class="speed-scale">
+          <svg class="scale__background" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+            <path d="m112.91,781.06l-13.64,9.85c-2.27,1.52-3.03,4.92-1.14,7.2,1.52,2.27,4.92,3.03,7.2,1.14l13.26-10.23c2.27-1.52,2.65-4.55,1.14-6.82-1.52-2.27-4.55-2.65-6.82-1.14Z" />
+            <path d="m120.87,708.71l-53.79,29.55c-3.41,1.52-4.55,5.68-2.65,9.09,1.89,3.03,6.06,4.17,9.47,2.27l52.65-30.68c3.03-1.52,3.79-5.3,2.27-7.95s-5.3-3.79-7.95-2.27Z" />
+            <path d="m64.05,685.61c-1.14-2.65-3.79-3.79-6.44-2.65l-15.53,6.44c-2.65,1.14-3.79,4.17-2.65,6.82,1.14,2.65,4.17,3.79,6.82,2.65l15.15-6.82c2.65-1.14,3.79-3.79,2.65-6.44Z" />
+            <path d="m90.94,621.59c-.76-3.41-4.17-4.92-7.2-4.17l-59.09,16.67c-3.41.76-5.68,4.55-4.55,8.33.76,3.79,4.55,5.68,8.33,4.55l58.71-18.18c3.03-.76,4.55-4.17,3.79-7.2Z" />
+            <path d="m32.61,578.41c-.38-2.65-3.03-4.55-5.68-4.17l-16.67,2.65c-2.65.38-4.55,3.41-4.17,6.06.38,2.65,3.41,4.55,6.06,4.17l16.29-3.03c2.65-.38,4.55-3.03,4.17-5.68Z" />
+            <path d="m7.23,533.33l61.36-4.17c3.03,0,5.3-3.03,5.3-6.06,0-3.41-3.03-5.68-6.06-5.68l-61.36,2.27c-3.79.38-6.82,3.41-6.44,7.2,0,3.79,3.41,6.82,7.2,6.44Z" />
+            <path d="m4.96,474.24l16.67.76c2.65.38,4.92-1.89,5.3-4.55.38-2.65-1.89-4.92-4.55-5.3l-16.67-1.14c-3.03,0-5.68,1.89-5.68,4.92,0,2.65,1.89,5.3,4.92,5.3Z" />
+            <path d="m12.91,417.8l60.23,10.23c3.41.38,6.06-1.89,6.82-4.92.76-3.03-1.52-6.06-4.55-6.82l-60.23-11.74c-3.79-.76-7.2,1.52-7.95,5.3-.38,3.79,1.89,7.2,5.68,7.95Z" />
+            <path d="m24.65,360.23l16.29,4.55c2.65.76,5.3-.76,6.06-3.41.76-2.65-.76-5.3-3.41-6.06l-15.91-4.92c-2.65-.76-5.68.76-6.44,3.41-.76,2.65.76,5.68,3.41,6.44Z" />
+            <path d="m45.49,307.2l56.82,23.48c3.03,1.14,6.44-.38,7.58-3.03,1.14-2.65,0-6.06-3.03-7.58l-55.68-25.38c-3.41-1.52-7.58,0-9.09,3.41-1.52,3.79,0,7.58,3.41,9.09Z" />
+            <path d="m70.11,253.41l14.39,8.33c2.27,1.14,5.3.38,6.82-1.89,1.52-2.27.76-5.3-1.52-6.82l-14.39-8.71c-2.65-1.52-5.68-.76-7.2,1.89-1.52,2.65-.76,5.68,1.89,7.2Z" />
+            <path d="m100.79,209.47l49.24,36.36c2.65,1.89,6.44,1.52,8.33-1.14s1.52-6.44-1.14-8.33l-48.48-37.5c-3.03-2.27-7.2-1.89-9.47,1.14-2.27,3.03-1.52,7.2,1.52,9.47Z" />
+            <path d="m149.65,173.86c1.89,1.52,4.92,1.52,6.82-.38s1.89-4.92,0-6.82l-12.12-11.74c-1.89-2.27-5.3-1.89-7.2,0s-1.89,5.3.38,7.2l12.12,11.74Z" />
+            <path d="m219.35,171.21c2.27,2.65,5.68,2.65,8.33.76,2.27-2.27,2.65-5.68.76-8.33l-38.64-47.73c-2.27-3.03-6.44-3.41-9.47-1.14-3.03,2.65-3.03,6.82-.76,9.85l39.77,46.59Z" />
+            <path d="m234.5,101.52c1.52,2.27,4.55,3.03,6.82,1.52,2.27-1.52,3.03-4.55,1.52-6.82l-9.09-14.02c-1.52-2.27-4.92-3.03-7.2-1.52-2.27,1.52-3.03,4.92-1.52,7.2l9.47,13.64Z" />
+            <path d="m303.06,115.15c1.52,3.03,4.92,4.17,7.95,2.65,2.65-1.52,4.17-4.92,2.65-7.95l-26.52-55.3c-1.52-3.41-5.68-4.55-9.09-3.03-3.41,1.52-4.92,5.68-3.03,9.09l28.03,54.55Z" />
+            <path d="m333.74,51.14c1.14,2.65,3.79,3.79,6.44,3.03,2.65-1.14,3.79-3.79,3.03-6.44l-5.3-15.91c-.76-2.65-3.79-4.17-6.44-3.03s-4.17,4.17-3.03,6.82l5.3,15.53Z" />
+            <path d="m395.11,80.68c.76,3.03,4.17,4.92,7.2,4.17,3.41-.76,5.3-3.79,4.55-6.82l-12.88-59.85c-.76-3.79-4.17-6.06-7.95-5.3-3.41,1.14-5.68,4.55-4.92,8.33l14.02,59.47Z" />
+            <path d="m443.97,25c0,2.65,2.65,4.55,5.3,4.17,2.65-.38,4.92-2.65,4.55-5.3l-1.52-16.67c-.38-2.65-2.65-4.92-5.68-4.55-2.65.38-4.92,2.65-4.55,5.68l1.89,16.67Z" />
+            <path d="m503.06,73.86c3.41,0,6.06-2.65,6.06-5.68l1.52-61.36c0-3.79-3.03-6.82-6.82-6.82s-6.82,3.03-6.82,6.82l.38,61.36c0,3.03,2.27,5.68,5.68,5.68Z" />
+            <path d="m558.37,30.68c2.65.38,5.3-1.52,5.68-4.17l2.27-17.05c.38-2.65-1.52-5.3-4.55-5.68-2.65-.38-5.3,1.52-5.68,4.55l-1.89,17.05c-.38,2.65,1.52,4.92,4.17,5.3Z" />
+            <path d="m601.55,86.74c3.03.76,6.44-1.14,7.2-4.17l15.53-59.47c.76-3.79-1.14-7.58-4.92-8.33-3.79-1.14-7.58,1.14-8.33,4.92l-13.64,59.85c-.76,3.41,1.14,6.44,4.17,7.2Z" />
+            <path d="m663.67,56.44c2.65.76,5.3-.38,6.44-3.03l6.06-15.53c1.14-2.65-.38-5.68-3.03-6.82-3.03-1.14-5.68.38-6.82,3.03l-5.68,15.91c-.76,2.65.38,5.68,3.03,6.44Z" />
+            <path d="m692.46,120.45c3.03,1.14,6.44.38,7.95-2.65l28.41-54.17c1.52-3.41.38-7.2-3.03-9.09-3.41-1.89-7.58-.38-9.09,3.03l-26.89,54.92c-1.52,3.03-.38,6.44,2.65,7.95Z" />
+          </svg>
+          <svg class="scale__indicators" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+            <path class="indicator" d="m112.91,781.06l-13.64,9.85c-2.27,1.52-3.03,4.92-1.14,7.2,1.52,2.27,4.92,3.03,7.2,1.14l13.26-10.23c2.27-1.52,2.65-4.55,1.14-6.82-1.52-2.27-4.55-2.65-6.82-1.14Z" />
+            <path class="indicator" d="m120.87,708.71l-53.79,29.55c-3.41,1.52-4.55,5.68-2.65,9.09,1.89,3.03,6.06,4.17,9.47,2.27l52.65-30.68c3.03-1.52,3.79-5.3,2.27-7.95s-5.3-3.79-7.95-2.27Z" />
+            <path class="indicator" d="m64.05,685.61c-1.14-2.65-3.79-3.79-6.44-2.65l-15.53,6.44c-2.65,1.14-3.79,4.17-2.65,6.82,1.14,2.65,4.17,3.79,6.82,2.65l15.15-6.82c2.65-1.14,3.79-3.79,2.65-6.44Z" />
+            <path class="indicator" d="m90.94,621.59c-.76-3.41-4.17-4.92-7.2-4.17l-59.09,16.67c-3.41.76-5.68,4.55-4.55,8.33.76,3.79,4.55,5.68,8.33,4.55l58.71-18.18c3.03-.76,4.55-4.17,3.79-7.2Z" />
+            <path class="indicator" d="m32.61,578.41c-.38-2.65-3.03-4.55-5.68-4.17l-16.67,2.65c-2.65.38-4.55,3.41-4.17,6.06.38,2.65,3.41,4.55,6.06,4.17l16.29-3.03c2.65-.38,4.55-3.03,4.17-5.68Z" />
+            <path class="indicator" d="m7.23,533.33l61.36-4.17c3.03,0,5.3-3.03,5.3-6.06,0-3.41-3.03-5.68-6.06-5.68l-61.36,2.27c-3.79.38-6.82,3.41-6.44,7.2,0,3.79,3.41,6.82,7.2,6.44Z" />
+            <path class="indicator" d="m4.96,474.24l16.67.76c2.65.38,4.92-1.89,5.3-4.55.38-2.65-1.89-4.92-4.55-5.3l-16.67-1.14c-3.03,0-5.68,1.89-5.68,4.92,0,2.65,1.89,5.3,4.92,5.3Z" />
+            <path class="indicator" d="m12.91,417.8l60.23,10.23c3.41.38,6.06-1.89,6.82-4.92.76-3.03-1.52-6.06-4.55-6.82l-60.23-11.74c-3.79-.76-7.2,1.52-7.95,5.3-.38,3.79,1.89,7.2,5.68,7.95Z" />
+            <path class="indicator" d="m24.65,360.23l16.29,4.55c2.65.76,5.3-.76,6.06-3.41.76-2.65-.76-5.3-3.41-6.06l-15.91-4.92c-2.65-.76-5.68.76-6.44,3.41-.76,2.65.76,5.68,3.41,6.44Z" />
+            <path class="indicator" d="m45.49,307.2l56.82,23.48c3.03,1.14,6.44-.38,7.58-3.03,1.14-2.65,0-6.06-3.03-7.58l-55.68-25.38c-3.41-1.52-7.58,0-9.09,3.41-1.52,3.79,0,7.58,3.41,9.09Z" />
+            <path class="indicator" d="m70.11,253.41l14.39,8.33c2.27,1.14,5.3.38,6.82-1.89,1.52-2.27.76-5.3-1.52-6.82l-14.39-8.71c-2.65-1.52-5.68-.76-7.2,1.89-1.52,2.65-.76,5.68,1.89,7.2Z" />
+            <path class="indicator" d="m100.79,209.47l49.24,36.36c2.65,1.89,6.44,1.52,8.33-1.14s1.52-6.44-1.14-8.33l-48.48-37.5c-3.03-2.27-7.2-1.89-9.47,1.14-2.27,3.03-1.52,7.2,1.52,9.47Z" />
+            <path class="indicator" d="m149.65,173.86c1.89,1.52,4.92,1.52,6.82-.38s1.89-4.92,0-6.82l-12.12-11.74c-1.89-2.27-5.3-1.89-7.2,0s-1.89,5.3.38,7.2l12.12,11.74Z" />
+            <path class="indicator" d="m219.35,171.21c2.27,2.65,5.68,2.65,8.33.76,2.27-2.27,2.65-5.68.76-8.33l-38.64-47.73c-2.27-3.03-6.44-3.41-9.47-1.14-3.03,2.65-3.03,6.82-.76,9.85l39.77,46.59Z" />
+            <path class="indicator" d="m234.5,101.52c1.52,2.27,4.55,3.03,6.82,1.52,2.27-1.52,3.03-4.55,1.52-6.82l-9.09-14.02c-1.52-2.27-4.92-3.03-7.2-1.52-2.27,1.52-3.03,4.92-1.52,7.2l9.47,13.64Z" />
+            <path class="indicator" d="m303.06,115.15c1.52,3.03,4.92,4.17,7.95,2.65,2.65-1.52,4.17-4.92,2.65-7.95l-26.52-55.3c-1.52-3.41-5.68-4.55-9.09-3.03-3.41,1.52-4.92,5.68-3.03,9.09l28.03,54.55Z" />
+            <path class="indicator" d="m333.74,51.14c1.14,2.65,3.79,3.79,6.44,3.03,2.65-1.14,3.79-3.79,3.03-6.44l-5.3-15.91c-.76-2.65-3.79-4.17-6.44-3.03s-4.17,4.17-3.03,6.82l5.3,15.53Z" />
+            <path class="indicator" d="m395.11,80.68c.76,3.03,4.17,4.92,7.2,4.17,3.41-.76,5.3-3.79,4.55-6.82l-12.88-59.85c-.76-3.79-4.17-6.06-7.95-5.3-3.41,1.14-5.68,4.55-4.92,8.33l14.02,59.47Z" />
+            <path class="indicator" d="m443.97,25c0,2.65,2.65,4.55,5.3,4.17,2.65-.38,4.92-2.65,4.55-5.3l-1.52-16.67c-.38-2.65-2.65-4.92-5.68-4.55-2.65.38-4.92,2.65-4.55,5.68l1.89,16.67Z" />
+            <path class="indicator" d="m503.06,73.86c3.41,0,6.06-2.65,6.06-5.68l1.52-61.36c0-3.79-3.03-6.82-6.82-6.82s-6.82,3.03-6.82,6.82l.38,61.36c0,3.03,2.27,5.68,5.68,5.68Z" />
+            <path class="indicator" d="m558.37,30.68c2.65.38,5.3-1.52,5.68-4.17l2.27-17.05c.38-2.65-1.52-5.3-4.55-5.68-2.65-.38-5.3,1.52-5.68,4.55l-1.89,17.05c-.38,2.65,1.52,4.92,4.17,5.3Z" />
+            <path class="indicator" d="m601.55,86.74c3.03.76,6.44-1.14,7.2-4.17l15.53-59.47c.76-3.79-1.14-7.58-4.92-8.33-3.79-1.14-7.58,1.14-8.33,4.92l-13.64,59.85c-.76,3.41,1.14,6.44,4.17,7.2Z" />
+            <path class="indicator" d="m663.67,56.44c2.65.76,5.3-.38,6.44-3.03l6.06-15.53c1.14-2.65-.38-5.68-3.03-6.82-3.03-1.14-5.68.38-6.82,3.03l-5.68,15.91c-.76,2.65.38,5.68,3.03,6.44Z" />
+            <path class="indicator" d="m692.46,120.45c3.03,1.14,6.44.38,7.95-2.65l28.41-54.17c1.52-3.41.38-7.2-3.03-9.09-3.41-1.89-7.58-.38-9.09,3.03l-26.89,54.92c-1.52,3.03-.38,6.44,2.65,7.95Z" />
+          </svg>
+          <div class="arrow">
+            <div class="arrow__anchor">
+              <svg class="icon" viewBox="0 0 16 112.22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path class="cls-1" d="m4.55,111.43c3.99,1.91,8.76.22,10.67-3.76,1.59-3.33.67-7.2-1.99-9.5L7.99,0,2.61,98.31c-.74.67-1.36,1.49-1.82,2.45-1.91,3.99-.22,8.76,3.76,10.67Z" fill="#e12c17" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <!-- Fuel Bar -->
+        <div class="fuel-bar">
+          <canvas class="bar" width="264" height="264"></canvas>
+          <svg class="icon" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.12516 0C1.35258 0 0.708496 0.644084 0.708496 1.41667V16.2917C0.708537 16.6829 1.02564 17 1.41683 17H9.91683C10.308 17 10.6251 16.6829 10.6252 16.2917V13.1042C10.6252 12.9086 10.7837 12.75 10.9793 12.75H11.3335C11.7331 12.75 12.0418 13.0587 12.0418 13.4583V14.1667C12.0418 15.3319 13.0016 16.2917 14.1668 16.2917C15.332 16.2917 16.2918 15.3319 16.2918 14.1667V4.95833C16.2918 4.29009 15.977 3.659 15.4424 3.25806L13.1749 1.55778C12.8288 1.29828 12.3865 1.4238 12.1829 1.70028C11.9509 2.01549 12.012 2.45774 12.3254 2.69222L13.1749 3.32861C13.3535 3.46243 13.4586 3.67263 13.4585 3.89583V5.66667C13.4585 6.32001 13.9169 6.88041 14.5251 7.03906C14.714 7.08831 14.8752 7.2419 14.8752 7.4375V14.1667C14.8752 14.5663 14.5664 14.875 14.1668 14.875C13.7672 14.875 13.4585 14.5663 13.4585 14.1667V13.4583C13.4585 12.2931 12.4987 11.3333 11.3335 11.3333H10.9793C10.7837 11.3333 10.6252 11.1748 10.6252 10.9792V1.41667C10.6252 0.644084 9.98108 2.125e-08 9.2085 2.125e-08L2.12516 0ZM2.47933 1.41667H8.85433C9.05054 1.41667 9.2085 1.57462 9.2085 1.77083V6.72917C9.2085 6.92537 9.05054 7.08333 8.85433 7.08333H2.47933C2.28312 7.08333 2.12516 6.92537 2.12516 6.72917V1.77083C2.12516 1.57462 2.28312 1.41667 2.47933 1.41667Z" fill="white" />
+          </svg>
+        </div>
+        <!-- Strength Bar -->
+        <div class="strength-bar">
+          <canvas class="bar" width="264" height="264"></canvas>
+          <svg class="icon" width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0.142795 17.2734C0.17203 17.2362 0.204547 17.2015 0.233231 17.1639L6.295 9.21137C6.53584 8.8954 6.5585 8.46975 6.41016 8.10118C5.72992 6.41108 5.94856 4.41693 7.16144 2.82573C8.27762 1.36141 10.0065 0.635407 11.713 0.693347C12.4095 0.716994 12.6785 1.51717 12.256 2.0714L10.6621 4.16258C10.3273 4.60181 10.4119 5.22929 10.8511 5.56409L12.0814 6.50188C12.5171 6.83397 13.1389 6.75372 13.4759 6.3219L15.1789 4.1403C15.5959 3.60606 16.4136 3.64141 16.6316 4.28313C17.1904 5.9282 16.9064 7.82921 15.7732 9.3159C14.5603 10.9071 12.6954 11.6464 10.8855 11.4384C10.4908 11.393 10.0863 11.5276 9.84549 11.8436L3.74064 19.8527C3.45487 20.2276 2.95936 20.2944 2.58445 20.0086L0.428723 18.3654C-0.00255002 18.1066 -0.0965786 17.578 0.142795 17.2734Z" fill="white" />
+          </svg>
+        </div>
+        <!-- Content -->
+        <div class="content">
+          <div class="content__row content__row--emergency">
+            <div class="emergency-indicator">
+              <div class="backdrop"></div>
+              <svg viewBox="0 0 30 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.45166 25H25.5476C27.4013 25 28.9148 24.229 29.5969 23.0003C30.2806 21.7454 30.0848 20.1788 29.0841 18.6598L17.8408 1.63878C17.1338 0.602034 16.1099 0 15.0113 0C13.8894 0 12.8655 0.602034 12.1585 1.63878L0.915198 18.6598C-0.0854988 20.1788 -0.279664 21.77 0.402403 23.0003C1.08613 24.2536 2.59796 25 4.45166 25ZM4.45166 23.3137H25.5725C26.8172 23.3137 27.7183 22.9265 28.0601 22.2047C28.4501 21.5043 28.3041 20.5643 27.6453 19.5522L16.4019 2.55577C16.0368 2.00131 15.524 1.66339 14.988 1.66339C14.4271 1.66339 13.8894 2.00131 13.5492 2.55577L2.30423 19.5522C1.64705 20.5643 1.50101 21.5043 1.891 22.2047C2.30423 22.9035 3.20701 23.3137 4.45166 23.3137ZM14.3043 3.01345C14.4503 2.77231 14.7192 2.50656 15.0113 2.50656C15.3423 2.50656 15.5733 2.80195 15.6871 2.94753C15.6994 2.96323 15.7103 2.97719 15.7199 2.98885L26.9383 19.9852C27.4262 20.7333 27.5722 21.3599 27.3283 21.7946C27.0843 22.2277 26.4504 22.4688 25.5476 22.4688H4.45166C3.52398 22.4688 2.89004 22.2277 2.64609 21.7946C2.42703 21.3845 2.54818 20.7333 3.03608 20.0098L14.3043 3.01345ZM14.3033 16.1287H15.8568L16.1641 8.22443H13.9789L14.3033 16.1287ZM15.0715 19.7821C15.3902 19.7821 15.669 19.6682 15.908 19.4406C16.147 19.2016 16.2666 18.9228 16.2666 18.6041C16.2666 18.274 16.147 17.9952 15.908 17.7676C15.669 17.5286 15.3902 17.4091 15.0715 17.4091C14.7529 17.4091 14.474 17.5286 14.235 17.7676C14.0074 17.9952 13.8936 18.274 13.8936 18.6041C13.8936 18.9228 14.0074 19.2016 14.235 19.4406C14.474 19.6682 14.7529 19.7821 15.0715 19.7821Z" fill="#FC412B" />
+              </svg>
+            </div>
+          </div>
+          <div class="content__row content__row--mileage">
+            <span class="mileage-value">000000</span>
+          </div>
+          <div class="content__row">
+            <div class="turn-indicators">
+              <div class="light">
+                <div class="light__arrow light__arrow--left">
+                  <div></div>
+                </div>
+                <div class="light__backdrop"></div>
+              </div>
+              <div class="light">
+                <div class="light__arrow light__arrow--right">
+                  <div></div>
+                </div>
+                <div class="light__backdrop"></div>
+              </div>
+            </div>
+            <span class="speed-value">0</span>
+          </div>
+          <div class="content__row content__row--speed-units">
+            <span class="speed-units">km/h</span>
+          </div>
+          <div class="content__row content__row--indicators">
+            <div class="engine-indicator">
+              <div class="icon"></div>
+            </div>
+            <div class="doors-indicator">
+              <div class="icon"></div>
+            </div>
+            <div class="headlights-indicator">
+              <div class="icon"></div>
+            </div>
+            <div class="staging-indicator">
+              <div class="icon"></div>
+              <span class="stage">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="process-hint" class="hint" style="display: none;">
+      <div class="wrapper">
+        <div class="blackout-img"></div>
+        <div class="container">
+          <div class="container__colored-ellipse"></div>
+          <div id="pre-title" class="container__pre-title" style="display: none;"></div>
+          <div id="title" class="container__title" style="display: none;">
+            <div class="container__title__line"></div>
+            <span></span>
+            <div class="container__title__line right"></div>
+          </div>
+          <div id="post-title" class="container__post-title" style="display: none;"></div>
+          <div id="description" class="container__description" style="display: none;"></div>
+          <div class="container__timer">
+            <div id="timer-title" class="container__timer__title"></div>
+            <div id="timer-time" class="container__timer__time"></div>
+            <div id="timer-progress" class="container__timer__progress-bar"></div>
+          </div>
+          <div id="post-description" class="container__post-description" style="display: none;">
+            <i class="material-icons">info</i>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="message">Используйте клавишу <div id="key"></div>
+    </div>
+          <div class="right-indicator-container">
+          <div class="right-indicator-block" v-if="armour !== 0">
+            <p class="progress-indicator">{{ armour }}</p>
+            <img class="right-indicator-icon" src="images/arm_active.svg" />
+          </div>
+          <div class="right-indicator-block" v-else>
+            <img class="right-indicator-icon" src="images/arm_noactive.svg" />
+          </div>
+          <div class="right-indicator-block">
+            <p class="circle-progress-indicator">{{ health }}</p>
+            <svg viewBox="0 0 100 100" stroke-linecap="round" style="transform: rotate(-90deg);">
+              <circle class="circle-progress-bg" cx="50" cy="50" r="40" fill="rgba(0, 0, 0, 0.4000000059604645)" />
+              <circle id="circle-health" class="circle-progress" cx="50" cy="50" r="40" fill="none" />
+            </svg>
+            <img class="circle-progress-icon" src="images/hp.svg" />
+          </div>
+          <div class="right-indicator-block" v-if="handcuffs !== 0">
+            <p class="progress-indicator">{{ handcuffs }}</p>
+            <img class="right-indicator-icon" src="images/handcuffs_active.svg" />
+          </div>
+          <div class="right-indicator-block" v-else>
+            <img class="right-indicator-icon" src="images/handcuffs_noactive.svg" />
+          </div>
+        </div>
+        <div class="cash-container">
+          <div class="cash-block">
+            <div class="cash">{{ money }}</div>
+            <img src="images/wallet.svg" style="bottom: 0.3vh;" />
+          </div>
+        </div>
+      </div>
+      <div class="city-street-block">
+        <img src="images/locationIcon.png" />
+        <div class="city-street-name">
+          <div class="city-name">{{ city }}</div>
+          <div class="street-name">{{ street }}</div>
+        </div>
+      </div>
+    </div>
+    <div id="dialog-container"></div>
+    <script>
+        window.cef = window.cef || {
+        emit: function (eventName, data) {
+            console.log(`[cef.emit] Event: ${eventName}, Data:`, data);
+        },
+        on: function (eventName, callback) {
+            console.log(`[cef.on] Listening for: ${eventName}`);
+            // Пример вызова callback вручную для теста:
+            // setTimeout(() => callback("Тестовое событие"), 1000);
+        },
+        set_focus: function (data) {
+            console.log(`[cef.focus] Focus event triggered with data: `, data);
+        },
+    };
+    </script>
+    <script src="script/vue.js"></script>
+    <script src="script/interface-hud.js"></script>
+    <script src="script/selector.js"></script>
+    <!-- <script src="script/dialogs.js"></script> -->
+    <script src="script/dialogs_new.js"></script>
+    <script src="script/speedometer.js"></script>
+    <script src="script/property-info.js"></script>
+    <script src="script/hints.js"></script>
+    <script src="script/sound.js"></script>
+    <script src="script/notifications.js"></script>
+    <script src="script/main.js"></script>
+  </body>
+</html>

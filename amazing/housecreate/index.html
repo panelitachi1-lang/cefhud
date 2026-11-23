@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Создание дома</title>
+<style>
+@font-face { font-family:'Proxima Nova Bold'; src:url('css/fonts/ProximaNova-Bold.ttf') format('truetype'); }
+@font-face { font-family:'Gotham-Medium'; src:url('css/fonts/Gotham Pro Medium.ttf') format('truetype'); }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100vw;height:100vh;background:transparent;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+
+.dialog{
+    position:fixed;top:50%;left:50%;
+    transform:translate(-50%,-50%) scale(1.5);
+    transform-origin:center;
+    background:linear-gradient(to bottom right,#1a1a1c,#201f24);
+    border:1px solid #444;border-radius:5px;
+    box-shadow:0 0 20px rgba(0,0,0,0.5);
+    min-width:420px;color:#fff;
+    user-select:none;overflow:hidden;
+    display:none;z-index:100;
+}
+.dialog.active{display:block;}
+.dialog::before{
+    content:"";position:absolute;top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(to bottom,rgba(26,26,28,0.6) 0%,rgba(32,31,36,0.1) 100%),url('images/background.svg');
+    z-index:-1;
+}
+
+.dialog-header{padding:10px 20px;cursor:move;display:flex;justify-content:space-between;align-items:center;}
+.dialog-header::after{content:"";flex-grow:1;height:1px;background:linear-gradient(to right,rgba(255,255,255,0.25),rgba(255,255,255,0));align-self:center;margin-top:10px;margin-left:5px;}
+.dialog-title{font-family:'Gotham-Medium',sans-serif;font-size:20px;color:#e69348;text-transform:uppercase;margin-top:10px;letter-spacing:0.155vh;}
+.dialog-step{font-family:'Proxima Nova Bold',sans-serif;font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px;}
+
+.dialog-content{padding:10px 20px 0;max-height:400px;overflow-y:auto;scrollbar-width:none;}
+.dialog-content::-webkit-scrollbar{width:4px;}
+.dialog-content::-webkit-scrollbar-thumb{background:#e69348;border-radius:2px;}
+
+.section-label{font-family:'Gotham-Medium',sans-serif;font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin:6px 0 4px;}
+.dialog-input-wrap{position:relative;margin:0 0 12px;}
+.dialog-input{
+    width:100%;height:40px;padding:0 10px;
+    background:#000;border:1px solid #000;
+    color:#aaa;border-radius:1px;
+    font-family:'Gotham-Medium',sans-serif;font-size:13px;line-height:40px;
+}
+.dialog-input:focus{outline:none;color:#fff;border-color:#e69348;}
+
+.err-msg{font-family:'Proxima Nova Bold',sans-serif;font-size:12px;color:#f44336;background:rgba(244,67,54,0.1);border-radius:2px;padding:5px 10px;margin-bottom:8px;display:none;}
+.err-msg.show{display:block;}
+
+/* список классов */
+.class-list{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.class-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;background:rgba(0,0,0,0.5);
+    border-radius:2px;cursor:pointer;
+    border:1px solid transparent;
+    font-family:'Proxima Nova Bold',sans-serif;font-size:13px;
+    transition:border-color .15s,background .15s;
+}
+.class-item:hover{background:#333;}
+.class-item.selected{border-color:#e69348;background:rgba(230,147,72,0.1);}
+.class-dot{width:8px;height:8px;border-radius:50%;background:#555;flex-shrink:0;}
+.class-item.selected .class-dot{background:#e69348;}
+.class-desc{font-size:11px;color:rgba(255,255,255,0.4);margin-left:auto;}
+
+.dialog-buttons{display:flex;justify-content:space-between;padding:10px 20px;gap:6px;}
+.btn{flex:1;padding:12px 15px;border:none;border-radius:1.5px;cursor:pointer;font-size:12px;text-transform:uppercase;font-family:'Proxima Nova Bold',sans-serif;margin-bottom:10px;transition:background 0.2s,box-shadow 0.3s;}
+.btn-primary{background:linear-gradient(to right,#21a24d,#5fda55);color:#fff;box-shadow:0 1.5px 0 #2d682f;}
+.btn-primary:hover{box-shadow:0 1.5px 0 #2d682f,0 3px 2px rgba(70,180,76,0.3);}
+.btn-secondary{background:#3f3f41;opacity:0.7;color:#fff;outline:0.1px solid rgba(255,255,255,0.3);}
+.btn-secondary:hover{opacity:1;}
+</style>
+</head>
+<body>
+
+<!-- ШАГ 1: цена -->
+<div class="dialog" id="dlg-price">
+    <div class="dialog-header">
+        <div>
+            <div class="dialog-title">Создание дома</div>
+            <div class="dialog-step">Шаг 1 из 3 — Цена</div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="section-label">Цена дома (руб.)</div>
+        <div class="dialog-input-wrap">
+            <input class="dialog-input" id="input-price" type="number" placeholder="Например: 5000000">
+        </div>
+        <div class="err-msg" id="err-price"></div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn btn-primary" onclick="submitPrice()">Далее</button>
+        <button class="btn btn-secondary" onclick="cancelCreate()">Отмена</button>
+    </div>
+</div>
+
+<!-- ШАГ 2: оплата -->
+<div class="dialog" id="dlg-pay">
+    <div class="dialog-header">
+        <div>
+            <div class="dialog-title">Создание дома</div>
+            <div class="dialog-step">Шаг 2 из 3 — Оплата в час</div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="section-label">Оплата в час (руб.)</div>
+        <div class="dialog-input-wrap">
+            <input class="dialog-input" id="input-pay" type="number" placeholder="Например: 5000">
+        </div>
+        <div class="err-msg" id="err-pay"></div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn btn-primary" onclick="submitPay()">Далее</button>
+        <button class="btn btn-secondary" onclick="showDlg('dlg-price')">Назад</button>
+    </div>
+</div>
+
+<!-- ШАГ 3: класс -->
+<div class="dialog" id="dlg-class">
+    <div class="dialog-header">
+        <div>
+            <div class="dialog-title">Создание дома</div>
+            <div class="dialog-step">Шаг 3 из 3 — Класс дома</div>
+        </div>
+    </div>
+    <div class="dialog-content">
+        <div class="section-label">Выберите класс</div>
+        <div class="class-list">
+            <div class="class-item selected" data-class="1" onclick="selectClass(this)">
+                <div class="class-dot"></div>
+                <span>Высокий класс</span>
+                <span class="class-desc">Интерьер 1</span>
+            </div>
+            <div class="class-item" data-class="2" onclick="selectClass(this)">
+                <div class="class-dot"></div>
+                <span>Средний класс</span>
+                <span class="class-desc">Интерьер 2</span>
+            </div>
+            <div class="class-item" data-class="3" onclick="selectClass(this)">
+                <div class="class-dot"></div>
+                <span>Низкий класс</span>
+                <span class="class-desc">Интерьер 3</span>
+            </div>
+        </div>
+    </div>
+    <div class="dialog-buttons">
+        <button class="btn btn-primary" onclick="submitClass()">Создать</button>
+        <button class="btn btn-secondary" onclick="showDlg('dlg-pay')">Назад</button>
+    </div>
+</div>
+
+<script>
+let selectedClass = 1;
+
+function showDlg(id) {
+    document.querySelectorAll('.dialog').forEach(d => d.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) {
+        el.classList.add('active');
+        const inp = el.querySelector('.dialog-input');
+        if (inp) setTimeout(() => inp.focus(), 50);
+    }
+}
+
+function showErr(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+function selectClass(el) {
+    document.querySelectorAll('.class-item').forEach(i => i.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedClass = parseInt(el.dataset.class);
+}
+
+function submitPrice() {
+    const val = parseInt(document.getElementById('input-price').value);
+    if (!val || val < 1 || val > 1000000000) {
+        showErr('err-price', 'Введите от 1 до 1 000 000 000 руб.');
+        return;
+    }
+    if (typeof cef !== 'undefined') cef.emit('housecreate:price', val);
+    showDlg('dlg-pay');
+}
+
+function submitPay() {
+    const val = parseInt(document.getElementById('input-pay').value);
+    if (!val || val < 1 || val > 100000000) {
+        showErr('err-pay', 'Введите от 1 до 100 000 000 руб.');
+        return;
+    }
+    if (typeof cef !== 'undefined') cef.emit('housecreate:pay', val);
+    showDlg('dlg-class');
+}
+
+function submitClass() {
+    if (typeof cef !== 'undefined') cef.emit('housecreate:class', selectedClass);
+    closeAll();
+}
+
+function cancelCreate() {
+    if (typeof cef !== 'undefined') cef.emit('housecreate:cancel');
+    closeAll();
+}
+
+function closeAll() {
+    document.querySelectorAll('.dialog').forEach(d => d.classList.remove('active'));
+    document.getElementById('input-price').value = '';
+    document.getElementById('input-pay').value = '';
+    selectedClass = 1;
+    document.querySelectorAll('.class-item').forEach(i => i.classList.remove('selected'));
+    document.querySelector('.class-item[data-class="1"]').classList.add('selected');
+}
+
+function makeDraggable(id) {
+    const d = document.getElementById(id);
+    const h = d.querySelector('.dialog-header');
+    let drag = false, ox = 0, oy = 0;
+    h.onmousedown = e => { drag = true; const r = d.getBoundingClientRect(); ox = e.clientX - r.left; oy = e.clientY - r.top; };
+    document.addEventListener('mousemove', e => {
+        if (!drag) return;
+        d.style.left = (e.clientX - ox) + 'px';
+        d.style.top = (e.clientY - oy) + 'px';
+        d.style.transform = 'scale(1.5)';
+        d.style.transformOrigin = 'top left';
+    });
+    document.addEventListener('mouseup', () => { drag = false; });
+}
+['dlg-price', 'dlg-pay', 'dlg-class'].forEach(makeDraggable);
+
+if (typeof cef !== 'undefined') {
+    cef.on('housecreate:open', () => showDlg('dlg-price'));
+    cef.on('housecreate:close', () => closeAll());
+} else {
+    showDlg('dlg-price');
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') cancelCreate(); });
+</script>
+</body>
+</html>
